@@ -11,12 +11,7 @@ Pikmin 2
 [discord]: https://discord.gg/CWKqYMePX8
 [progress]: https://decomp.dev/projectPiki/pikmin2
 
-A work-in-progress decompilation of Pikmin 2.
-
-Supported versions:
-
-- `GPVE01`: USA Retail
-- `GPVE01_D17`: USA Demo 17
+A mod of Pikmin 2 that adds the go-here functionality found in Pikmin 3.
 
 Index
 -----
@@ -26,16 +21,13 @@ Index
   - [macOS](#macos)
   - [Linux](#linux)
 - [Building](#building)
-- [Diffing](#diffing)
-- [Modding](#modding)
 
 Dependencies
 ------------
 
 ### Windows
 
-On Windows, it's **highly recommended** to use native tooling. WSL or msys2 are **not** required.  
-When running under WSL, [objdiff](#diffing) is unable to get filesystem notifications for automatic rebuilds.
+On Windows, it's **highly recommended** to use native tooling. WSL or msys2 are **not** required.
 
 - Install [Python](https://www.python.org/downloads/) and add it to `%PATH%`.
   - Also available from the [Windows Store](https://apps.microsoft.com/store/detail/python-311/9NRWMJP3717K).
@@ -74,7 +66,7 @@ Building
 - Clone the repository:
 
   ```sh
-  git clone https://github.com/projectPiki/pikmin2.git
+  git clone https://github.com/dannye/pikmin2-go-here.git
   ```
 
 - Using [Dolphin Emulator](https://dolphin-emu.org/), extract your game's system data to `orig/GPVE01`. (Or `orig/GPVE01_D17` for demo)
@@ -82,49 +74,18 @@ Building
   - Go to the `Filesystem` tab and right-click `Disc` -> `Extract System Data`.
 ![Dolphin filesystem extract](assets/dolphin-extract.png)
   - After extraction, the following file should exist: `orig/GPVE01/sys/main.dol`.
+  - Copy the contents of `assets/Drought` to your games `files/user/` folder, so the directory: `files/user/Drought` should exist.
+
 - Configure:
 
   ```sh
-  python configure.py
+  python configure.py --non-matching
   ```
 
-  To use the demo version, add `--version GPVE01_D17`. Add `--help` to see all available options.
 - Build:
 
   ```sh
   ninja
   ```
 
-Diffing
--------
-
-Once the initial build succeeds, an `objdiff.json` should exist in the project root.
-
-Download the latest release from [encounter/objdiff](https://github.com/encounter/objdiff). Under project settings, set `Project directory`. The configuration should be loaded automatically.
-
-Select an object from the left sidebar to begin diffing. Changes to the project will rebuild automatically: changes to source files, headers, `configure.py`, `splits.txt` or `symbols.txt`.
-
-![objdiff project configuration](assets/objdiff.png)
-
-Modding
--------
-
-To enable modding, run `configure.py` with the `--non-matching` flag:
-
-```sh
-python configure.py --non-matching
-```
-
-This:
-
-- Disables final hash verification.
-- Builds all assembly files in `asm`.
-- Builds all source files marked as `Matching` and `Equivalent` in `configure.py`.
-
-To add new source files to the DOL:
-
-- Uncomment the final `"lib": "moddingU"` bracket in `configure.py` - change the name to whatever you like, and feel free to add more than one new lib using this as a template.
-- Add any new files along with their paths as `Object(Matching, folder/file.cpp)` where indicated.
-- Within the `link_order_callback` function below the object configuration, uncomment and add each new file with its path within `src`, as indicated.
-
-Once built with `ninja`, the new DOL will exist at `build/GPVE01/main.dol`.
+Once built with `ninja`, the new DOL will exist at `build/GPVE01/main.dol`. Copy this to your extracted games `sys/` folder, overwriting the old one. You are now ready to play, test, and develop the mod.

@@ -141,8 +141,9 @@ config.sjiswrap_path = args.sjiswrap
 config.progress = args.progress
 if not is_windows():
     config.wrapper = args.wrapper
-# If you want to use the original EpochFlame-curated .s asm files, comment out this line below
-config.asm_dir = None
+# Don't build asm unless we're --non-matching
+if not config.non_matching:
+    config.asm_dir = None
 
 # Tool versions
 config.binutils_tag = "2.42-1"
@@ -2082,17 +2083,17 @@ config.libs = [
             Object(NonMatching, "utilityU/PSMainSide_ObjCalc.cpp"),
         ],
     },
-    # Uncomment the below and add in any new files with their paths within src/
-    # NB: They must be marked as Matching or Equivalent to get linked for modding.
-    # {
-    #     "lib": "moddingU",
-    #     "cflags": [*cflags_pikmin],
-    #     "mw_version": "GC/2.6",
-    #     "host": True,
-    #     "objects": [
-    #         Object(Matching, "folder/file.cpp"),
-    #     ],
-    # },
+    {
+        "lib": "droughtU",
+        "cflags": [*cflags_pikmin],
+        "mw_version": "GC/2.6",
+        "host": True,
+        "objects": [
+            Object(Equivalent, "plugProjectDroughtU/FastPathfinder.cpp"),
+            Object(Equivalent, "plugProjectDroughtU/GoHereMap.cpp"),
+            Object(Equivalent, "plugProjectDroughtU/GoHereNavi.cpp"),
+        ],
+    },
 ]
 
 # Optional callback to adjust link order. This can be used to add, remove, or reorder objects.
@@ -2105,11 +2106,7 @@ def link_order_callback(module_id: int, objects: List[str]) -> List[str]:
     if not config.non_matching:
         return objects
     if module_id == 0:  # DOL
-        return objects + [
-            # Add new files here.
-            # NB: any new files added here need to also be added to a library above
-            # "folder/file.cpp",
-            ]
+        return objects + ["plugProjectDroughtU/FastPathfinder.cpp", "plugProjectDroughtU/GoHereMap.cpp", "plugProjectDroughtU/GoHereNavi.cpp"]
     return objects
 
 # Uncomment to enable the link order callback.

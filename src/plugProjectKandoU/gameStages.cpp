@@ -9,6 +9,7 @@ const char gameStages[] = "gameStages";
 
 namespace Game {
 Stages* stageList;
+f32 gMapRotation = 0.0f;
 
 /**
  * @note Address: N/A
@@ -258,6 +259,7 @@ void CourseInfo::read(Stream& stream)
 
 	if (strcmp(currentBytes, "startangle") == 0) {
 		mStartAngle = stream.readFloat();
+		gMapRotation = roundAng(TORADIANS(mStartAngle));
 		stream.readString(nullptr, 0);
 
 		// Convert angle to radians

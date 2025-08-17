@@ -70,9 +70,19 @@ struct Vector3 {
 	// Direction Functions
 	static inline T getDirectionFromTo(const Vector3& from, Vector3& to);
 	static inline T getFlatDirectionFromTo(Vector3& from, Vector3& to);
+	static inline T getFlatDirectionFromTo(const Vector3& from, Vector3& to);
 	inline T setDirectionFromTo(const Vector3& from, const Vector3& to);
 	inline void setFlatDirectionFromTo(Vector3& from, Vector3& to);
 	inline void toFlatDirection();
+
+	static Vector3 middle(const Vector3& a, const Vector3& b)
+	{
+		Vector3 result;
+		result.x = (a.x + b.x) * 0.5f;
+		result.y = (a.y + b.y) * 0.5f;
+		result.z = (a.z + b.z) * 0.5f;
+		return result;
+	}
 
 	// Calculation Functions
 	inline T dot(const Vector3& other);
@@ -229,6 +239,14 @@ inline T Vector3<T>::getDirectionFromTo(const Vector3& from, Vector3& to)
 
 template <typename T>
 inline T Vector3<T>::getFlatDirectionFromTo(Vector3& from, Vector3& to)
+{
+	to -= from;
+	to.y = 0.0f;
+	return to.normalise();
+}
+
+template <typename T>
+inline T Vector3<T>::getFlatDirectionFromTo(const Vector3& from, Vector3& to)
 {
 	to -= from;
 	to.y = 0.0f;

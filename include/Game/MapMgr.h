@@ -6,6 +6,7 @@
 #include "SysShape/Model.h"
 
 #include "GenericObjectMgr.h"
+#include "Game/routeMgr.h"
 #include "MapCollision.h"
 #include "Game/MoveInfo.h"
 #include "Vector3.h"
@@ -168,6 +169,19 @@ struct ShapeMapMgr : public MapMgr {
 };
 
 extern MapMgr* mapMgr;
+extern f32 gMapRotation;
+
+inline bool isTriangleAt(const Vector3f& position)
+{
+	Game::CurrTriInfo info;
+	info.mUpdateOnNewMaxY = false;
+	info.mPosition        = position;
+	mapMgr->getCurrTri(info);
+	return info.mTriangle != nullptr;
+}
+
+inline Game::WayPoint* getWaypointAt(s16 idx) { return mapMgr->mRouteMgr->getWayPoint(idx); }
+
 } // namespace Game
 
 #endif

@@ -199,6 +199,17 @@ inline f32 clamp(f32 val, f32 limit)
 	return val;
 }
 
+inline f32 clamp(f32 val, f32 min, f32 max)
+{
+	if (val < min) {
+		val = min;
+	} else if (val > max) {
+		val = max;
+	}
+
+	return val;
+}
+
 inline void clampAngle(f32& angle)
 {
 	if (angle < 0.0f) {
