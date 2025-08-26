@@ -189,9 +189,17 @@ void CarryInfo::draw(Graphics& gfx, CarryInfoParam& param)
 		switch (param.mUseType) {
 		case CINFOTYPE_Table:
 			// take colors from color table based on stored carry color/type
+			u16 numerator, denominator;
+			if (param.mIsTopFirst) {
+				numerator = param.mMaxWeight;
+				denominator = param.mCurrentWeight;
+			} else {
+				numerator = param.mCurrentWeight;
+				denominator = param.mMaxWeight;
+			}
 			f32 yOffsetTop, yOffsetBottom;
 			f32 scaleTop, scaleBottom;
-			if (!param.mIsTopFirst) {
+			if (numerator < denominator) {
 				scaleTop      = 0.75f;
 				scaleBottom   = 1.1f;
 				yOffsetTop    = 7.7000003f;
@@ -213,8 +221,8 @@ void CarryInfo::draw(Graphics& gfx, CarryInfoParam& param)
 			drawNumberPrim(gfx, 0.0f, 0.0f, 10, colortop, 1.0f);
 
 			// draw top and bottom numbers
-			drawNumber(gfx, 0.0f, yOffsetTop, param.mCurrentWeight, colortop, scaleTop);
-			drawNumber(gfx, 0.0f, yOffsetBottom, param.mMaxWeight, colorbottom, scaleBottom);
+			drawNumber(gfx, 0.0f, yOffsetTop, numerator, colortop, scaleTop);
+			drawNumber(gfx, 0.0f, yOffsetBottom, denominator, colorbottom, scaleBottom);
 			break;
 
 		case CINFOTYPE_Scale:
