@@ -1,6 +1,7 @@
 #include "Game/NaviState.h"
 #include "Game/NaviParms.h"
 #include "Game/MoviePlayer.h"
+#include "PikiAI.h"
 #include "Game/rumble.h"
 #include "PSM/Navi.h"
 #include "Game/PikiState.h"
@@ -228,6 +229,7 @@ void NaviThrowState::onKeyEvent(SysShape::KeyEvent const& key)
 		} else {
 			Vector3f pos = mNavi->mWhistle->getPosition();
 			mNavi->throwPiki(mPiki, pos);
+			mPiki->mBrain->start(PikiAI::ACT_Free, nullptr);
 			mPiki->mFsm->transit(mPiki, PIKISTATE_Flying, nullptr);
 			mHasThrown = true;
 		}
