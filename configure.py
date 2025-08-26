@@ -2094,6 +2094,15 @@ config.libs = [
             Object(Equivalent, "plugProjectDroughtU/GoHereNavi.cpp"),
         ],
     },
+    {
+        "lib": "dannyeU",
+        "cflags": [*cflags_pikmin],
+        "mw_version": "GC/2.6",
+        "host": True,
+        "objects": [
+            Object(Equivalent, "plugProjectDannyeU/naviState.cpp"),
+        ],
+    },
 ]
 
 # Optional callback to adjust link order. This can be used to add, remove, or reorder objects.
@@ -2106,7 +2115,12 @@ def link_order_callback(module_id: int, objects: List[str]) -> List[str]:
     if not config.non_matching:
         return objects
     if module_id == 0:  # DOL
-        return objects + ["plugProjectDroughtU/FastPathfinder.cpp", "plugProjectDroughtU/GoHereMap.cpp", "plugProjectDroughtU/GoHereNavi.cpp"]
+        return objects + [
+            "plugProjectDroughtU/FastPathfinder.cpp",
+            "plugProjectDroughtU/GoHereMap.cpp",
+            "plugProjectDroughtU/GoHereNavi.cpp",
+            "plugProjectDannyeU/naviState.cpp",
+        ]
     return objects
 
 # Uncomment to enable the link order callback.
