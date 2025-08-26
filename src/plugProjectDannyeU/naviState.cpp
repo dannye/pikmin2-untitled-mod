@@ -231,6 +231,7 @@ void NaviThrowState::onKeyEvent(SysShape::KeyEvent const& key)
 			mNavi->throwPiki(mPiki, pos);
 			mPiki->mBrain->start(PikiAI::ACT_Free, nullptr);
 			mPiki->mFsm->transit(mPiki, PIKISTATE_Flying, nullptr);
+			mPiki->setFreeLightEffect(false);
 			mHasThrown = true;
 		}
 		break;
