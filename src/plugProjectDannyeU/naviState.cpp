@@ -219,4 +219,23 @@ void NaviThrowWaitState::exec(Navi* navi)
 	}
 }
 
+void NaviThrowState::onKeyEvent(SysShape::KeyEvent const& key)
+{
+	switch (key.mType) {
+	case 2:
+		if (!mPiki->isThrowable()) {
+			mHasThrown = true;
+		} else {
+			Vector3f pos = mNavi->mWhistle->getPosition();
+			mNavi->throwPiki(mPiki, pos);
+			mPiki->mFsm->transit(mPiki, PIKISTATE_Flying, nullptr);
+			mHasThrown = true;
+		}
+		break;
+	case KEYEVENT_END:
+		transit(mNavi, NSID_Walk, nullptr);
+		break;
+	}
+}
+
 } // namespace Game
