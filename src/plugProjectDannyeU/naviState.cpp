@@ -181,6 +181,11 @@ void NaviThrowWaitState::exec(Navi* navi)
 		}
 	}
 
+	if (navi->mController1->getButtonDown() & Controller::PRESS_B) {
+		transit(navi, NSID_Walk, nullptr);
+		return;
+	}
+
 	if (!(navi->mController1->getButton() & Controller::PRESS_A)) {
 		sortPikis(navi);
 		navi->mHoldPikiTimer = mHoldChargeLevel / 3.0f * CG_NAVIPARMS(navi).mTimeLimitForThrowing();
