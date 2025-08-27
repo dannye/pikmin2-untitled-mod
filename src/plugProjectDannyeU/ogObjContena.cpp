@@ -39,7 +39,7 @@ void ObjContena::setStickUpDown()
 	mStickAnimMgr->stickUpDown();
 }
 
-void ObjContena::putinPiki(bool soundType)
+void ObjContena::putinPiki(bool soundType, u8 step)
 {
 	og::Screen::DispMemberContena* disp = mDisp;
 	if (disp->mDataContena.mCurrField <= disp->mDataContena.mInOnionCount) {
@@ -66,12 +66,15 @@ void ObjContena::putinPiki(bool soundType)
 			setStickDown();
 		}
 	} else {
+		if (step > disp->mDataContena.mInSquadCount) {
+			step = disp->mDataContena.mInSquadCount;
+		}
 		changeMessage(0);
-		disp->mDataContena.mInOnionCount++;
-		disp->mDataContena.mInSquadCount--;
-		disp->mDataContena.mInParty2--;
-		disp->mDataContena.mOnMapCount--;
-		disp->mDataContena.mResult++;
+		disp->mDataContena.mInOnionCount += step;
+		disp->mDataContena.mInSquadCount -= step;
+		disp->mDataContena.mInParty2 -= step;
+		disp->mDataContena.mOnMapCount -= step;
+		disp->mDataContena.mResult += step;
 		disp->mDataContena.mInTransfer = (u16)abs(disp->mDataContena.mResult); // should be just abs
 		setStickUpDown();
 		if (mTimer1 <= 0.0f) {
@@ -84,7 +87,7 @@ void ObjContena::putinPiki(bool soundType)
 	}
 }
 
-void ObjContena::takeoutPiki(bool soundType)
+void ObjContena::takeoutPiki(bool soundType, u8 step)
 {
 	og::Screen::DispMemberContena* disp = mDisp;
 	if (disp->mDataContena.mInSquadCount < disp->mDataContena.mMaxPikiOnField) {
@@ -125,12 +128,18 @@ void ObjContena::takeoutPiki(bool soundType)
 		return;
 	}
 
+	if (step > disp->mDataContena.mInOnionCount) {
+		step = disp->mDataContena.mInOnionCount;
+	}
+	if (step > disp->mDataContena.mMaxPikiCount - disp->mDataContena.mOnMapCount) {
+		step = disp->mDataContena.mMaxPikiCount - disp->mDataContena.mOnMapCount;
+	}
 	changeMessage(0);
-	disp->mDataContena.mInOnionCount--;
-	disp->mDataContena.mInSquadCount++;
-	disp->mDataContena.mInParty2++;
-	disp->mDataContena.mOnMapCount++;
-	disp->mDataContena.mResult--;
+	disp->mDataContena.mInOnionCount -= step;
+	disp->mDataContena.mInSquadCount += step;
+	disp->mDataContena.mInParty2 += step;
+	disp->mDataContena.mOnMapCount += step;
+	disp->mDataContena.mResult -= step;
 	disp->mDataContena.mInTransfer = (u16)abs(disp->mDataContena.mResult);
 	setStickUpDown();
 	if (mTimer2 <= 0.0f) {
@@ -180,11 +189,15 @@ bool ObjContena::moveContena()
 	}
 
 	if (data->mState == 1) {
+		u8 step = 1;
+		if (mController->getButton() & Controller::PRESS_Y) {
+			step = 10;
+		}
 		if (mController->getButton() & Controller::PRESS_UP) {
 			switch (mScreenState) {
 			case 0:
 				mScreenState = 1;
-				putinPiki(false);
+				putinPiki(false, step);
 				mTimer0 = mMoveTime;
 				break;
 			case 1:
@@ -193,7 +206,7 @@ bool ObjContena::moveContena()
 					mScreenState = 2;
 				break;
 			case 2:
-				putinPiki(true);
+				putinPiki(true, step);
 				break;
 			default:
 				mScreenState = 0;
@@ -203,7 +216,7 @@ bool ObjContena::moveContena()
 			switch (mScreenState) {
 			case 0:
 				mScreenState = 3;
-				takeoutPiki(false);
+				takeoutPiki(false, step);
 				mTimer0 = mMoveTime;
 				break;
 			case 3:
@@ -212,7 +225,7 @@ bool ObjContena::moveContena()
 					mScreenState = 4;
 				break;
 			case 4:
-				takeoutPiki(true);
+				takeoutPiki(true, step);
 				break;
 			default:
 				mScreenState = 0;

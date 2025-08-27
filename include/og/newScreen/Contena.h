@@ -52,8 +52,8 @@ struct ObjContena : public ::Screen::ObjBase {
 	virtual void doUpdateFadeoutFinish();                 // _64
 	virtual void doDraw(Graphics& gfx);                   // _68
 
-	void putinPiki(bool);
-	void takeoutPiki(bool);
+	void putinPiki(bool, u8);
+	void takeoutPiki(bool, u8);
 	bool moveContena();
 	void commonUpdate();
 
