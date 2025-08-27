@@ -9,6 +9,38 @@
 
 namespace Game {
 
+void NaviNukuState::exec(Navi* navi)
+{
+	if (moviePlayer && moviePlayer->mDemoState != DEMOSTATE_Inactive) {
+		if (mIsFollower) {
+			NaviFollowArg followArg(false); // not new to party
+			transit(navi, NSID_Follow, &followArg);
+			return;
+		}
+		transit(navi, NSID_Walk, nullptr);
+		return;
+	}
+	navi->mVelocity       = 0.0f;
+	navi->mTargetVelocity = 0.0f;
+	if (!navi->assertMotion(mAnimID)) {
+		if (mIsFollower != 0) {
+			NaviFollowArg followArg(false); // not new to party
+			transit(navi, NSID_Follow, &followArg);
+		} else {
+			transit(navi, NSID_Walk, nullptr);
+		}
+		navi->mPluckingCounter = 0;
+	} else if (mIsFollower == 0) {
+		if (mDidPressA == 0 && navi->mController1->isButtonHeld(JUTGamePad::PRESS_A)) {
+			mDidPressA = 1;
+		}
+		if (mDidPressA != 0 && !navi->mController1->isButtonHeld(JUTGamePad::PRESS_A)) {
+			mIsActive = 1;
+			navi->mPluckingCounter++;
+		}
+	}
+}
+
 void NaviThrowWaitState::exec(Navi* navi)
 {
 	if (moviePlayer && moviePlayer->mDemoState != DEMOSTATE_Inactive) {
