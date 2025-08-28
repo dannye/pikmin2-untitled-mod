@@ -555,7 +555,7 @@ struct NaviNukuState : public NaviState {
 	// _00-_10 = NaviState
 	u16 mCounter;   // _10
 	u8 mDidPluckSE; // _12
-	u8 mDidPressA;  // _13
+	u8 mDidPressB;  // _13
 	u8 mIsActive;   // _14
 	u8 _15;         // _15
 	s16 mAnimID;    // _16

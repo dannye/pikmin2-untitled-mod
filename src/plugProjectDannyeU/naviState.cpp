@@ -31,10 +31,11 @@ void NaviNukuState::exec(Navi* navi)
 		}
 		navi->mPluckingCounter = 0;
 	} else if (mIsFollower == 0) {
-		if (mDidPressA == 0 && navi->mController1->isButtonHeld(JUTGamePad::PRESS_A)) {
-			mDidPressA = 1;
+		if (mDidPressB == 0 && navi->mController1->isButtonDown(JUTGamePad::PRESS_B)) {
+			mDidPressB = 1;
+			mIsActive  = 0;
 		}
-		if (mDidPressA != 0 && !navi->mController1->isButtonHeld(JUTGamePad::PRESS_A)) {
+		if (mDidPressB == 0 && mIsActive == 0) {
 			mIsActive = 1;
 			navi->mPluckingCounter++;
 		}
