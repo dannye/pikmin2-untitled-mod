@@ -9,6 +9,7 @@
 #include "Drought/Pathfinder.h"
 #include "Game/GameLight.h"
 #include "Game/CPlate.h"
+#include "P2JME/P2JME.h"
 
 #define GO_HERE_NAVI_DEBUG (false)
 
@@ -428,15 +429,17 @@ void Navi::doDirectDraw(Graphics& gfx)
 			display = true;
 		}
 		if (display) {
-			Vector3f pos(mPosition.x, 30.0f + mPosition.y, mPosition.z);
+			GXSetZMode(GX_FALSE, GX_LESS, GX_FALSE);
+			Vector3f pos(mPosition.x, mPosition.y + 35.0f, mPosition.z);
 
-			PerspPrintfInfo info(0.67f);
-			info.mPerspectiveOffsetX = -40;
+			PerspPrintfInfo info(0.4f);
+			info.mFont = gP2JMEMgr->mFont;
+			info.mPerspectiveOffsetX = -55;
 			info.mColorA = Color4(0xFF, 0x44, 0x44, 0xFF);
 			info.mColorB = Color4(0xFF, 0x22, 0x22, 0xFF);
 			gfx.perspPrintf(info, pos, "B");
 
-			info.mPerspectiveOffsetX = 10;
+			info.mPerspectiveOffsetX = 15;
 			info.mColorA = Color4(0xFF, 0xFF, 0xFF, 0xFF);
 			info.mColorB = Color4(0x99, 0x99, 0xFF, 0xFF);
 			gfx.perspPrintf(info, pos, "Cancel");
