@@ -812,7 +812,7 @@ struct NaviWalkState : public NaviState {
 	void execAI(Navi*);
 	bool checkAI(Navi*);
 	void initAI_wait(Navi*);
-	void execAI_wait(Navi*);
+	bool execAI_wait(Navi*);
 	void initAI_animation(Navi*);
 	void execAI_animation(Navi*);
 	void execAI_attack(Navi*);

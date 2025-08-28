@@ -3,6 +3,7 @@
 #include "Game/MoviePlayer.h"
 #include "Dolphin/rand.h"
 #include "PikiAI.h"
+#include "Game/Entities/ItemPikihead.h"
 #include "Game/rumble.h"
 #include "PSM/Navi.h"
 #include "Game/PikiState.h"
@@ -14,8 +15,8 @@ void NaviWalkState::execAI(Navi* navi)
 {
 	switch (mAIState) {
 	case WALKAI_Wait:
-		execAI_wait(navi);
-		checkAI(navi);
+		if (execAI_wait(navi))
+			checkAI(navi);
 		break;
 
 	case WALKAI_Animation:
@@ -33,15 +34,45 @@ void NaviWalkState::execAI(Navi* navi)
 	}
 }
 
-void NaviWalkState::execAI_wait(Navi* navi)
+bool NaviWalkState::execAI_wait(Navi* navi)
 {
 	blendVelocity(navi, Vector3f::zero);
 	mIdleTimer -= sys->mDeltaTime;
 
 	if (mIdleTimer <= 0.0f) {
-		initAI_animation(navi);
-		mIdleTimer = 2.0f + randFloat();
-		return;
+		ItemPikihead::Item* targetSprout = nullptr;
+		if (navi != naviMgr->getActiveNavi()) {
+			f32 actionRadius = naviMgr->mNaviParms->mNaviParms.mAutopluckDistance.mValue;
+			f32 minDist = actionRadius * actionRadius;
+
+			Iterator<ItemPikihead::Item> iter(ItemPikihead::mgr);
+
+			CI_LOOP(iter)
+			{
+				ItemPikihead::Item* sprout = *iter;
+				Vector3f sproutPos = sprout->getPosition();
+				Vector3f naviPos   = navi->getPosition();
+				f32 heightDiff     = FABS(sproutPos.y - naviPos.y);
+				f32 sqrXZ          = sqrDistanceXZ(sproutPos, naviPos);
+
+				if (sprout->canPullout() && sqrXZ < minDist && heightDiff < 25.0f
+				    && (!gameSystem->isVersusMode() || sprout->mColor == (1 - navi->mNaviIndex))) {
+					minDist      = sqrXZ;
+					targetSprout = sprout;
+				}
+			}
+		}
+
+		if (targetSprout) {
+			NaviNukuAdjustStateArg nukuAdjustArg;
+			navi->setupNukuAdjustArg(targetSprout, nukuAdjustArg);
+			navi->mFsm->transit(navi, NSID_NukuAdjust, &nukuAdjustArg);
+			return false;
+		} else {
+			initAI_animation(navi);
+			mIdleTimer = 2.0f + randFloat();
+		}
+		return true;
 	}
 
 	if (mTarget) {
@@ -59,6 +90,7 @@ void NaviWalkState::execAI_wait(Navi* navi)
 		navi->mFaceDir += 0.2f * angDist(roundAng(JMAAtan2Radian(targetPos.x, targetPos.z)), navi->mFaceDir);
 		navi->mFaceDir = roundAng(navi->mFaceDir);
 	}
+	return true;
 }
 
 void NaviNukuState::exec(Navi* navi)
@@ -83,7 +115,7 @@ void NaviNukuState::exec(Navi* navi)
 		}
 		navi->mPluckingCounter = 0;
 	} else if (mIsFollower == 0) {
-		if (mDidPressB == 0 && navi->mController1->isButtonDown(JUTGamePad::PRESS_B)) {
+		if (mDidPressB == 0 && navi->mController1 && navi->mController1->isButtonDown(JUTGamePad::PRESS_B)) {
 			mDidPressB = 1;
 			mIsActive  = 0;
 		}
