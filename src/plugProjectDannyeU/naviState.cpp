@@ -1,6 +1,7 @@
 #include "Game/NaviState.h"
 #include "Game/NaviParms.h"
 #include "Game/MoviePlayer.h"
+#include "Dolphin/rand.h"
 #include "PikiAI.h"
 #include "Game/rumble.h"
 #include "PSM/Navi.h"
@@ -8,6 +9,57 @@
 #include "Game/CPlate.h"
 
 namespace Game {
+
+void NaviWalkState::execAI(Navi* navi)
+{
+	switch (mAIState) {
+	case WALKAI_Wait:
+		execAI_wait(navi);
+		checkAI(navi);
+		break;
+
+	case WALKAI_Animation:
+		execAI_animation(navi);
+		checkAI(navi);
+		break;
+
+	case WALKAI_Escape:
+		execAI_escape(navi);
+		break;
+
+	case WALKAI_Attack:
+		execAI_attack(navi);
+		break;
+	}
+}
+
+void NaviWalkState::execAI_wait(Navi* navi)
+{
+	blendVelocity(navi, Vector3f::zero);
+	mIdleTimer -= sys->mDeltaTime;
+
+	if (mIdleTimer <= 0.0f) {
+		initAI_animation(navi);
+		mIdleTimer = 2.0f + randFloat();
+		return;
+	}
+
+	if (mTarget) {
+		Vector3f naviPos   = navi->getPosition();
+		Vector3f targetPos = mTarget->getPosition();
+		Vector3f sep       = naviPos - targetPos;
+		f32 rad            = 100.0f;
+		if (sep.sqrMagnitude2D() > SQUARE(rad)) {
+			mTarget = nullptr;
+			return;
+		}
+
+		Vector3f::getFlatDirectionFromTo(naviPos, targetPos);
+
+		navi->mFaceDir += 0.2f * angDist(roundAng(JMAAtan2Radian(targetPos.x, targetPos.z)), navi->mFaceDir);
+		navi->mFaceDir = roundAng(navi->mFaceDir);
+	}
+}
 
 void NaviNukuState::exec(Navi* navi)
 {
