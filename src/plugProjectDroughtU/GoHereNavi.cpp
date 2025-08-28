@@ -418,6 +418,32 @@ void NaviGoHereState::changeState(Navi* player, bool isWanted)
 
 void Navi::doDirectDraw(Graphics& gfx)
 {
+	int stateID = getStateID();
+	if (stateID == NSID_Nuku || stateID == NSID_NukuAdjust) {
+		bool display;
+		if (stateID == NSID_Nuku) {
+			Game::NaviNukuState* state = (Game::NaviNukuState*)getCurrState();
+			display = state->mDidPressB == 0;
+		} else {
+			display = true;
+		}
+		if (display) {
+			Vector3f pos(mPosition.x, 30.0f + mPosition.y, mPosition.z);
+
+			PerspPrintfInfo info(0.67f);
+			info.mPerspectiveOffsetX = -40;
+			info.mColorA = Color4(0xFF, 0x44, 0x44, 0xFF);
+			info.mColorB = Color4(0xFF, 0x22, 0x22, 0xFF);
+			gfx.perspPrintf(info, pos, "B");
+
+			info.mPerspectiveOffsetX = 10;
+			info.mColorA = Color4(0xFF, 0xFF, 0xFF, 0xFF);
+			info.mColorB = Color4(0x99, 0x99, 0xFF, 0xFF);
+			gfx.perspPrintf(info, pos, "Cancel");
+		}
+		return;
+	}
+
 #if GO_HERE_NAVI_DEBUG
 	if (getStateID() != NSID_GoHere) {
 		return;
