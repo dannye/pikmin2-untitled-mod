@@ -1,4 +1,5 @@
 #include "PikiAI.h"
+#include "Game/PikiState.h"
 #include "Game/Navi.h"
 #include "Game/gameStat.h"
 #include "Game/CPlate.h"
@@ -45,7 +46,9 @@ void ActFormation::init(ActionArg* initArg)
 		JUT_PANICLINE(330, "slot id is -1");
 	}
 
-	mParent->startMotion(Game::IPikiAnims::RUN2, Game::IPikiAnims::RUN2, nullptr, nullptr);
+	if (mParent->getStateID() != Game::PIKISTATE_Nukare) {
+		mParent->startMotion(Game::IPikiAnims::RUN2, Game::IPikiAnims::RUN2, nullptr, nullptr);
+	}
 
 	mHasReleasedSlot   = false;
 	mUnusedVal         = 0;

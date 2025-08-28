@@ -2,6 +2,7 @@
 #include "Game/Navi.h"
 #include "Game/rumble.h"
 #include "efx/TEnemyDive.h"
+#include "PikiAI.h"
 
 namespace Game {
 
@@ -35,6 +36,8 @@ void PikiNukareState::onKeyEvent(Piki* piki, SysShape::KeyEvent const& keyEvent)
 			efx::createSimplePkAp(position);
 			piki->startSound(piki->mNavi, PSSE_PL_PULLOUT_PIKI, false);
 		}
+		PikiAI::ActFormationInitArg initArg(piki->mNavi);
+		piki->mBrain->start(PikiAI::ACT_Formation, &initArg);
 
 		break;
 	case KEYEVENT_END:
