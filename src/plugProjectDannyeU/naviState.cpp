@@ -1,6 +1,7 @@
 #include "Game/NaviState.h"
 #include "Game/NaviParms.h"
 #include "Game/MoviePlayer.h"
+#include "Game/PikiMgr.h"
 #include "Dolphin/rand.h"
 #include "PikiAI.h"
 #include "Game/Entities/ItemPikihead.h"
@@ -123,6 +124,144 @@ void NaviNukuState::exec(Navi* navi)
 			mIsActive = 1;
 			navi->mPluckingCounter++;
 		}
+	}
+}
+
+void NaviNukuAdjustState::exec(Navi* navi)
+{
+	if (moviePlayer && moviePlayer->mDemoState != DEMOSTATE_Inactive) {
+		if (mIsFollowing) {
+			transit(navi, NSID_Follow, nullptr);
+		} else {
+			transit(navi, NSID_Walk, nullptr);
+		}
+		return;
+	}
+
+	if (!mPikiHead->isAlive()) {
+		if (mIsFollowing) {
+			transit(navi, NSID_Follow, nullptr);
+		} else {
+			transit(navi, NSID_Walk, nullptr);
+		}
+		return;
+	}
+
+	if (!mIsFollowing) {
+		navi->makeCStick(false);
+	}
+
+	if (navi->mController1 && navi->mController1->getButton() & Controller::PRESS_B) {
+		navi->mPluckingCounter = 0;
+		transit(navi, NSID_Walk, nullptr);
+		return;
+	}
+
+	mNaviPosition = navi->getPosition();
+
+	Vector3f sproutToNavi = mPikiHead->getPosition() - navi->getPosition();
+	sproutToNavi.length(); // unused
+
+	Vector3f targetToNavi    = mTargetPosition - navi->getPosition(); // f26, f27, f28
+	f32 targetToNaviDistance = targetToNavi.length2D();               // f31
+	f32 absoluteDeltaY       = absF(targetToNavi.y);
+
+	f32 normalisedDistance = targetToNavi.normalise(); // f30, why tho
+
+	f32 newFaceDir = mAngleToPiki;
+	f32 angle      = angDist(newFaceDir, navi->mFaceDir);
+	if (absF(angle) < (PI / 10.0f) && targetToNaviDistance < 2.0f && absoluteDeltaY < 10.0f) {
+		navi->mFaceDir      = newFaceDir;
+		PikiMgr::mBirthMode = PikiMgr::PSM_Force;
+		Piki* piki          = pikiMgr->birth();
+		PikiMgr::mBirthMode = PikiMgr::PSM_Normal;
+
+		if (!piki) {
+			if (mIsFollowing) {
+				transit(navi, NSID_Follow, nullptr);
+			} else {
+				transit(navi, NSID_Walk, nullptr);
+			}
+			return;
+		}
+
+		piki->init(nullptr);
+		piki->changeShape(mPikiHead->mColor);
+		piki->changeHappa(mPikiHead->mHeadType);
+
+		Vector3f sproutPos = mPikiHead->getPosition();
+		piki->setPosition(sproutPos, false);
+		mPikiHead->kill(nullptr);
+		mPikiHead = nullptr;
+
+		NukareStateArg nukareArg;
+		nukareArg.mIsPlucking = navi->mPluckingCounter != 0;
+		nukareArg.mNavi       = navi;
+		piki->mFsm->transit(piki, PIKISTATE_Nukare, &nukareArg);
+
+		NaviNukuArg nukuArg;
+		nukuArg.mIsFollowing = mIsFollowing;
+
+		transit(navi, NSID_Nuku, &nukuArg);
+
+	} else {
+		f32 angleOffset = 0.2f * angle;
+		navi->mFaceDir  = roundAng(navi->mFaceDir + angleOffset);
+
+		f32 speed = 100.0f;
+		if (speed * sys->mDeltaTime > normalisedDistance) {
+			speed = 0.5f / sys->mDeltaTime;
+		}
+
+		navi->mVelocity       = targetToNavi * speed;
+		navi->mTargetVelocity = Vector3f(0.0f);
+		navi->mTargetVelocity = targetToNavi * speed;
+	}
+
+	if (mWallHitCounter > 10) {
+		if (mIsFollowing) {
+			transit(navi, NSID_Follow, nullptr);
+		} else {
+			transit(navi, NSID_Walk, nullptr);
+		}
+
+		return;
+	}
+
+	if (!mIsMoving) {
+		return;
+	}
+
+	Vector3f currentVel = navi->mVelocity; // f31, f30, f29
+	mIsMoving--;
+	Vector3f naviPos = navi->getPosition();
+
+	Vector3f pikiToNavi    = mCollidedPikiPosition - naviPos;
+	f32 distancePikiToNavi = pikiToNavi.normalise();
+
+	// If the distance is 0, return
+	if (!(distancePikiToNavi > 0.0f)) {
+		return;
+	}
+
+	f32 velocityDifference = pikiToNavi.z * currentVel.z - targetToNavi.x * currentVel.x;
+	Vector3f newVel(pikiToNavi.x, 0.0f, -pikiToNavi.z);
+
+	f32 simSpeed = currentVel.length();
+
+	newVel *= simSpeed;
+	if (!(velocityDifference < 0.0f)) {
+		newVel *= -1.0f;
+	}
+
+	// Interpolate 35% current velocity and 65% new velocity
+	Vector3f blendedVel = currentVel * 0.35f + newVel * 0.65f;
+
+	f32 speed = blendedVel.normalise();
+	if (speed != 0.0f) {
+		Vector3f finalVel     = blendedVel * simSpeed;
+		navi->mVelocity       = finalVel;
+		navi->mTargetVelocity = finalVel;
 	}
 }
 
