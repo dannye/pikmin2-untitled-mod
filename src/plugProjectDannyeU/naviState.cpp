@@ -216,6 +216,7 @@ void NaviNukuAdjustState::exec(Navi* navi)
 		navi->mVelocity       = targetToNavi * speed;
 		navi->mTargetVelocity = Vector3f(0.0f);
 		navi->mTargetVelocity = targetToNavi * speed;
+		navi->mWhistle->update(navi->mTargetVelocity, false);
 	}
 
 	if (mWallHitCounter > 10) {
