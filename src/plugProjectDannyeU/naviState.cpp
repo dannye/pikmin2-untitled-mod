@@ -67,7 +67,7 @@ bool NaviWalkState::execAI_wait(Navi* navi)
 		if (targetSprout) {
 			NaviNukuAdjustStateArg nukuAdjustArg;
 			navi->setupNukuAdjustArg(targetSprout, nukuAdjustArg);
-			navi->mFsm->transit(navi, NSID_NukuAdjust, &nukuAdjustArg);
+			transit(navi, NSID_NukuAdjust, &nukuAdjustArg);
 			return false;
 		} else {
 			initAI_animation(navi);
@@ -142,7 +142,34 @@ void NaviNukuAdjustState::exec(Navi* navi)
 		if (mIsFollowing) {
 			transit(navi, NSID_Follow, nullptr);
 		} else {
-			transit(navi, NSID_Walk, nullptr);
+			f32 actionRadius = naviMgr->mNaviParms->mNaviParms.mAutopluckDistance.mValue;
+			f32 minDist = actionRadius * actionRadius;
+
+			Iterator<ItemPikihead::Item> iter(ItemPikihead::mgr);
+			ItemPikihead::Item* targetSprout = nullptr;
+
+			CI_LOOP(iter)
+			{
+				ItemPikihead::Item* sprout = *iter;
+				Vector3f sproutPos = sprout->getPosition();
+				Vector3f naviPos   = navi->getPosition();
+				f32 heightDiff     = FABS(sproutPos.y - naviPos.y);
+				f32 sqrXZ          = sqrDistanceXZ(sproutPos, naviPos);
+
+				if (sprout->canPullout() && sqrXZ < minDist && heightDiff < 25.0f
+					&& (!gameSystem->isVersusMode() || sprout->mColor == (1 - navi->mNaviIndex))) {
+					minDist      = sqrXZ;
+					targetSprout = sprout;
+				}
+			}
+
+			if (targetSprout) {
+				NaviNukuAdjustStateArg nukuAdjustArg;
+				navi->setupNukuAdjustArg(targetSprout, nukuAdjustArg);
+				transit(navi, NSID_NukuAdjust, &nukuAdjustArg);
+			} else {
+				transit(navi, NSID_Walk, nullptr);
+			}
 		}
 		return;
 	}
