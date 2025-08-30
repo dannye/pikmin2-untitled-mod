@@ -584,7 +584,7 @@ lbl_constructor:
 	.4byte "wallCallback__Q24Game19NaviNukuAdjustStateFPQ24Game4NaviR10Vector3<f>"
 	.4byte bounceCallback__Q24Game9NaviStateFPQ24Game4NaviPQ23Sys8Triangle
 	.4byte pressable__Q24Game9NaviStateFv
-	.4byte callable__Q24Game9NaviStateFv
+	.4byte callable__Q24Game19NaviNukuAdjustStateFv
 	.4byte ignoreAtari__Q24Game19NaviNukuAdjustStateFPQ24Game8Creature
 	.4byte needYChangeMotion__Q24Game9NaviStateFv
 	.4byte vsUsableY__Q24Game9NaviStateFv

@@ -127,6 +127,8 @@ void NaviNukuState::exec(Navi* navi)
 	}
 }
 
+bool NaviNukuAdjustState::callable() { return true; }
+
 void NaviNukuAdjustState::exec(Navi* navi)
 {
 	if (moviePlayer && moviePlayer->mDemoState != DEMOSTATE_Inactive) {
