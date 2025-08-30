@@ -242,7 +242,8 @@ bool InteractFue::actNavi(Game::Navi* navi)
 		return false;
 	}
 
-	if (!naviState->callable()) {
+	// hack: setting NukuAdjust to callable doesn't seem to work
+	if (!naviState->callable() && naviState->getCurrStateID() != NSID_NukuAdjust) {
 		return false;
 	}
 

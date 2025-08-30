@@ -517,6 +517,7 @@ struct NaviNukuAdjustState : public NaviState {
 	virtual void collisionCallback(Navi*, CollEvent&); // _28
 	virtual void wallCallback(Navi*, Vector3f&);       // _2C
 	virtual bool ignoreAtari(Creature* toIgnore);      // _3C
+	virtual bool callable() { return true; } // doesn't seem to work properly
 
 	// _00     = VTBL
 	// _00-_10 = NaviState
