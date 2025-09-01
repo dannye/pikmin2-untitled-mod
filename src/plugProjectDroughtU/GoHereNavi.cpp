@@ -447,6 +447,66 @@ void Navi::doDirectDraw(Graphics& gfx)
 		return;
 	}
 
+	if (stateID == NSID_Walk || stateID == NSID_Throw || stateID == NSID_ThrowWait) {
+		Piki* piki = nullptr;
+		if (stateID == NSID_Walk) {
+			piki = mNextThrowPiki;
+		} else if (stateID == NSID_Throw) {
+			Game::NaviThrowState* state = (Game::NaviThrowState*)getCurrState();
+			piki = state->mPiki;
+		} else if (stateID == NSID_ThrowWait) {
+			Game::NaviThrowWaitState* state = (Game::NaviThrowWaitState*)getCurrState();
+			if (state->mHasHeldPiki)
+				piki = state->mHeldPiki;
+			else
+				piki = state->mNextPiki;
+		}
+		if (piki) {
+			Vector3f start = getPosition() + Vector3f(-15.0f * sinf(mFaceDir), 10.0f, -15.0f * cosf(mFaceDir));
+			Vector3f end(mWhistle->mPosition.x, start.y, mWhistle->mPosition.z);
+			Vector3f throwDir = end - start; throwDir.normalise();
+
+			float height, distance;
+			switch (piki->mPikiKind) {
+			case Yellow:
+				end -= throwDir * 10.0f;
+				height = C_NAVIPARMS.mThrowHeightYellow.mValue;
+				distance = 1.0f;
+				break;
+			case Purple:
+				end += throwDir * 5.0f;
+				height = C_NAVIPARMS.mThrowBlackHeight.mValue + 10.0f;
+				distance = 2.0f;
+				break;
+			case White:
+				end -= throwDir * 7.5f;
+				height = C_NAVIPARMS.mThrowWhiteHeight.mValue;
+				distance = 1.0f;
+				break;
+			default:
+				end -= throwDir * 2.5f;
+				height = C_NAVIPARMS.mThrowHeightMin.mValue;
+				distance = 1.0f;
+			}
+
+			GXSetLineWidth(stateID == NSID_ThrowWait ? 8 : 4, GX_TO_ZERO);
+			gfx.mDrawColor = piki->mDefaultColor;
+			Vector3f prev = start;
+			for (int i = 1; i <= 31; ++i) {
+				float t = i / 32.0f;
+				Vector3f next(
+					start.x * (1.0f - t) + end.x * t,
+					start.y - 4.0f / (distance * distance) * height * t * (t - distance),
+					start.z * (1.0f - t) + end.z * t
+				);
+				if (i > 2) gfx.drawLine(prev, next);
+				prev = next;
+			}
+			gfx.drawLine(prev, end);
+		}
+		return;
+	}
+
 #if GO_HERE_NAVI_DEBUG
 	if (getStateID() != NSID_GoHere) {
 		return;
