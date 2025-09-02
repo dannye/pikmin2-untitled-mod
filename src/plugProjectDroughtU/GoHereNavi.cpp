@@ -493,7 +493,7 @@ void Navi::doDirectDraw(Graphics& gfx)
 				distance = 1.0f;
 			}
 
-			GXSetLineWidth(stateID == NSID_ThrowWait ? 8 : 4, GX_TO_ZERO);
+			GXSetLineWidth(stateID == NSID_ThrowWait ? 10 : 6, GX_TO_ZERO);
 			gfx.mDrawColor = piki->mDefaultColor;
 			Vector3f prev = start;
 			for (int i = 1; i <= 31; ++i) {
