@@ -419,6 +419,10 @@ void NaviGoHereState::changeState(Navi* player, bool isWanted)
 
 void Navi::doDirectDraw(Graphics& gfx)
 {
+	if (moviePlayer && moviePlayer->mDemoState != DEMOSTATE_Inactive) {
+		return;
+	}
+
 	int stateID = getStateID();
 	if (stateID == NSID_Nuku || stateID == NSID_NukuAdjust) {
 		bool display;
