@@ -42,7 +42,7 @@ bool NaviWalkState::execAI_wait(Navi* navi)
 
 	if (mIdleTimer <= 0.0f) {
 		ItemPikihead::Item* targetSprout = nullptr;
-		if (navi != naviMgr->getActiveNavi()) {
+		if (!gameSystem->isMultiplayerMode() && navi != naviMgr->getActiveNavi()) {
 			f32 actionRadius = naviMgr->mNaviParms->mNaviParms.mAutopluckDistance.mValue;
 			f32 minDist = actionRadius * actionRadius;
 
@@ -56,8 +56,7 @@ bool NaviWalkState::execAI_wait(Navi* navi)
 				f32 heightDiff     = FABS(sproutPos.y - naviPos.y);
 				f32 sqrXZ          = sqrDistanceXZ(sproutPos, naviPos);
 
-				if (sprout->canPullout() && sqrXZ < minDist && heightDiff < 25.0f
-				    && (!gameSystem->isVersusMode() || sprout->mColor == (1 - navi->mNaviIndex))) {
+				if (sprout->canPullout() && sqrXZ < minDist && heightDiff < 25.0f) {
 					minDist      = sqrXZ;
 					targetSprout = sprout;
 				}
