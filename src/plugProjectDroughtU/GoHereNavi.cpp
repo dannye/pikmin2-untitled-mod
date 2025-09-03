@@ -35,9 +35,13 @@ void BaseGameSection::directDraw(Graphics& gfx, Viewport* vp)
 	gfx.initPrimDraw(vp->getMatrix(true));
 	doDirectDraw(gfx, vp);
 	if (naviMgr) {
-		Navi* player = naviMgr->getActiveNavi();
-		if (player) {
-			player->doDirectDraw(gfx);
+		Navi* olimar = naviMgr->getAt(NAVIID_Olimar);
+		Navi* louie = naviMgr->getAt(NAVIID_Louie);
+		if (olimar) {
+			olimar->doDirectDraw(gfx);
+		}
+		if (louie) {
+			louie->doDirectDraw(gfx);
 		}
 	}
 	if (TexCaster::Mgr::sInstance) {
@@ -419,6 +423,9 @@ void NaviGoHereState::changeState(Navi* player, bool isWanted)
 
 void Navi::doDirectDraw(Graphics& gfx)
 {
+	if (gfx.mCurrentViewport->mCamera != mCamera) {
+		return;
+	}
 	if (moviePlayer && moviePlayer->mDemoState != DEMOSTATE_Inactive) {
 		return;
 	}
