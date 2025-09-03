@@ -141,6 +141,10 @@ void NaviGoHereState::exec(Navi* player)
 		if (!player->isAlive()) {
 			return;
 		}
+
+		if (gameSystem->mIsFrozen) {
+			return;
+		}
 	}
 
 	// Handle movement towards the target

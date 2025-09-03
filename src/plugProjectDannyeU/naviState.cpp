@@ -14,6 +14,10 @@ namespace Game {
 
 void NaviWalkState::execAI(Navi* navi)
 {
+	if (gameSystem->mIsFrozen) {
+		return;
+	}
+
 	switch (mAIState) {
 	case WALKAI_Wait:
 		if (execAI_wait(navi))
