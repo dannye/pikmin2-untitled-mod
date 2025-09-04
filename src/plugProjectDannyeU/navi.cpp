@@ -137,4 +137,26 @@ void Navi::doDirectDraw(Graphics& gfx)
 #endif
 }
 
+bool Navi::canSwap()
+{
+	s32 state = getStateID();
+	return isAlive() && state != NSID_Nuku && state != NSID_NukuAdjust && state != NSID_Punch;
+}
+
+f32 Navi::getMoveSpeed()
+{
+	f32 speed = getOlimarData()->hasItem(OlimarData::ODII_RepugnantAppendage) ? naviMgr->mNaviParms->mNaviParms.mRushBootSpeed()
+	                                                                          : naviMgr->mNaviParms->mNaviParms.mMoveSpeed();
+
+	return speed;
+}
+
+void Navi::GoHereSuccess() { }
+
+void Navi::GoHereInterupted() { }
+
+void Navi::GoHereInteruptBlocked() { }
+
+void Navi::GoHereInteruptWater() { }
+
 } // namespace Game

@@ -360,30 +360,4 @@ void NaviGoHereState::changeState(Navi* player, bool isWanted)
 	PSSystem::spSysIF->playSystemSe(isWanted ? PSSE_SY_PLAYER_CHANGE : PSSE_PL_ORIMA_DAMAGE, 0);
 }
 
-
-bool Navi::canSwap()
-{
-	s32 state = getStateID();
-	return isAlive() && state != NSID_Nuku && state != NSID_NukuAdjust && state != NSID_Punch;
-}
-
-f32 Navi::getMoveSpeed()
-{
-	f32 speed = getOlimarData()->hasItem(OlimarData::ODII_RepugnantAppendage) ? naviMgr->mNaviParms->mNaviParms.mRushBootSpeed()
-	                                                                          : naviMgr->mNaviParms->mNaviParms.mMoveSpeed();
-
-	return speed;
-}
-
-void Navi::GoHereSuccess()
-{
-	// your code here
-}
-
-void Navi::GoHereInterupted() { }
-
-void Navi::GoHereInteruptBlocked() { }
-
-void Navi::GoHereInteruptWater() { }
-
 } // namespace Game
