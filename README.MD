@@ -11,7 +11,7 @@ Pikmin 2
 [discord]: https://discord.gg/CWKqYMePX8
 [progress]: https://decomp.dev/projectPiki/pikmin2
 
-A mod of Pikmin 2 that adds the go-here functionality found in Pikmin 3.
+A WIP mod of Pikmin 2, based on the "Go Here" mod by Drought-Ender.
 
 Index
 -----
@@ -66,7 +66,7 @@ Building
 - Clone the repository:
 
   ```sh
-  git clone https://github.com/dannye/pikmin2-go-here.git
+  git clone https://github.com/dannye/pikmin2-untitled-mod.git
   ```
 
 - Using [Dolphin Emulator](https://dolphin-emu.org/), extract your game's system data to `orig/GPVE01`. (Or `orig/GPVE01_D17` for demo)
