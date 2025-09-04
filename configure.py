@@ -1276,7 +1276,7 @@ config.libs = [
             Object(Matching, "plugProjectKandoU/onyonMgr.cpp"),
             Object(Matching, "plugProjectKandoU/objectTypes.cpp"),
             Object(NonMatching, "plugProjectKandoU/naviState.cpp"),
-            Object(NonMatching, "plugProjectKandoU/pikiState.cpp"),
+            Object(Equivalent, "plugProjectKandoU/pikiState.cpp"),
             Object(Matching, "plugProjectKandoU/interactPiki.cpp"),
             Object(NonMatching, "plugProjectKandoU/gameCPlate.cpp"),
             Object(Matching, "plugProjectKandoU/updateMgr.cpp"),
@@ -2102,7 +2102,6 @@ config.libs = [
         "objects": [
             Object(Equivalent, "plugProjectDannyeU/navi.cpp"),
             Object(Equivalent, "plugProjectDannyeU/naviState.cpp"),
-            Object(Equivalent, "plugProjectDannyeU/pikiState.cpp"),
             Object(Equivalent, "plugProjectDannyeU/aiFormation.cpp"),
             Object(Equivalent, "plugProjectDannyeU/ogObjContena.cpp"),
         ],
@@ -2125,7 +2124,6 @@ def link_order_callback(module_id: int, objects: List[str]) -> List[str]:
             "plugProjectDroughtU/GoHereNavi.cpp",
             "plugProjectDannyeU/navi.cpp",
             "plugProjectDannyeU/naviState.cpp",
-            "plugProjectDannyeU/pikiState.cpp",
             "plugProjectDannyeU/aiFormation.cpp",
             "plugProjectDannyeU/ogObjContena.cpp",
         ]
