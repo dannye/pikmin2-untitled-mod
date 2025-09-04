@@ -2101,6 +2101,7 @@ config.libs = [
         "host": True,
         "objects": [
             Object(Equivalent, "plugProjectDannyeU/navi.cpp"),
+            Object(Equivalent, "plugProjectDannyeU/baseGameSection.cpp"),
             Object(Equivalent, "plugProjectDannyeU/aiFormation.cpp"),
             Object(Equivalent, "plugProjectDannyeU/ogObjContena.cpp"),
         ],
@@ -2122,6 +2123,7 @@ def link_order_callback(module_id: int, objects: List[str]) -> List[str]:
             "plugProjectDroughtU/GoHereMap.cpp",
             "plugProjectDroughtU/GoHereNavi.cpp",
             "plugProjectDannyeU/navi.cpp",
+            "plugProjectDannyeU/baseGameSection.cpp",
             "plugProjectDannyeU/aiFormation.cpp",
             "plugProjectDannyeU/ogObjContena.cpp",
         ]
