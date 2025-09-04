@@ -27,6 +27,8 @@
 #include "utilityU.h"
 #include "JSystem/JUtility/JUTGamePad.h"
 
+#include "Drought/Game/NaviGoHere.h"
+
 int unusedNaviStateArray[] = { 1, 2, 3, 0 }; // ?
 
 static const int unusedNaviStateArray2[] = { 0, 0, 0 };
@@ -168,6 +170,9 @@ void NaviFSM::init(Navi* navi)
 	registerState(new NaviCarryBombState);
 	registerState(new NaviClimbState);
 	registerState(new NaviPathMoveState);
+
+	// CUSTOM STATES
+	registerState(new NaviGoHereState);
 }
 
 /**
@@ -547,10 +552,14 @@ void NaviWalkState::collisionCallback(Navi* navi, CollEvent& event)
  */
 void NaviWalkState::execAI(Navi* navi)
 {
+	if (gameSystem->mIsFrozen) {
+		return;
+	}
+
 	switch (mAIState) {
 	case WALKAI_Wait:
-		execAI_wait(navi);
-		checkAI(navi);
+		if (execAI_wait(navi))
+			checkAI(navi);
 		break;
 
 	case WALKAI_Animation:
@@ -681,15 +690,44 @@ void NaviWalkState::initAI_wait(Navi* navi)
  * @note Address: 0x8017F550
  * @note Size: 0x1C4
  */
-void NaviWalkState::execAI_wait(Navi* navi)
+bool NaviWalkState::execAI_wait(Navi* navi)
 {
 	blendVelocity(navi, Vector3f::zero);
 	mIdleTimer -= sys->mDeltaTime;
 
 	if (mIdleTimer <= 0.0f) {
-		initAI_animation(navi);
-		mIdleTimer = 2.0f + randFloat();
-		return;
+		ItemPikihead::Item* targetSprout = nullptr;
+		if (!gameSystem->isMultiplayerMode() && navi != naviMgr->getActiveNavi()) {
+			f32 actionRadius = naviMgr->mNaviParms->mNaviParms.mAutopluckDistance.mValue;
+			f32 minDist = actionRadius * actionRadius;
+
+			Iterator<ItemPikihead::Item> iter(ItemPikihead::mgr);
+
+			CI_LOOP(iter)
+			{
+				ItemPikihead::Item* sprout = *iter;
+				Vector3f sproutPos = sprout->getPosition();
+				Vector3f naviPos   = navi->getPosition();
+				f32 heightDiff     = FABS(sproutPos.y - naviPos.y);
+				f32 sqrXZ          = sqrDistanceXZ(sproutPos, naviPos);
+
+				if (sprout->canPullout() && sqrXZ < minDist && heightDiff < 25.0f) {
+					minDist      = sqrXZ;
+					targetSprout = sprout;
+				}
+			}
+		}
+
+		if (targetSprout) {
+			NaviNukuAdjustStateArg nukuAdjustArg;
+			navi->setupNukuAdjustArg(targetSprout, nukuAdjustArg);
+			transit(navi, NSID_NukuAdjust, &nukuAdjustArg);
+			return false;
+		} else {
+			initAI_animation(navi);
+			mIdleTimer = 2.0f + randFloat();
+		}
+		return true;
 	}
 
 	if (mTarget) {
@@ -707,6 +745,7 @@ void NaviWalkState::execAI_wait(Navi* navi)
 		navi->mFaceDir += 0.2f * angDist(roundAng(JMAAtan2Radian(targetPos.x, targetPos.z)), navi->mFaceDir);
 		navi->mFaceDir = roundAng(navi->mFaceDir);
 	}
+	return true;
 	/*
 	stwu     r1, -0x50(r1)
 	mflr     r0
@@ -1959,7 +1998,7 @@ void NaviNukuState::init(Navi* navi, StateArg* stateArg)
 	navi->mSoundObj->startSound(PSSE_PL_PULLING_PIKI, 0);
 	mDidPluckSE = 0;
 	mIsActive   = 0;
-	mDidPressA  = 0;
+	mDidPressB  = 0;
 	_15         = 0;
 	navi->mMass = 0.0f;
 }
@@ -1990,10 +2029,11 @@ void NaviNukuState::exec(Navi* navi)
 		}
 		navi->mPluckingCounter = 0;
 	} else if (mIsFollower == 0) {
-		if (mDidPressA == 0 && navi->mController1->isButtonHeld(JUTGamePad::PRESS_A)) {
-			mDidPressA = 1;
+		if (mDidPressB == 0 && navi->mController1 && navi->mController1->isButtonDown(JUTGamePad::PRESS_B)) {
+			mDidPressB = 1;
+			mIsActive  = 0;
 		}
-		if (mDidPressA != 0 && !navi->mController1->isButtonHeld(JUTGamePad::PRESS_A)) {
+		if (mDidPressB == 0 && mIsActive == 0) {
 			mIsActive = 1;
 			navi->mPluckingCounter++;
 		}
@@ -2049,6 +2089,8 @@ void NaviNukuState::onKeyEvent(Navi* navi, SysShape::KeyEvent const& key)
 		break;
 	}
 }
+
+bool NaviNukuAdjustState::callable() { return true; }
 
 /**
  * @note Address: 0x801820A0
@@ -2291,7 +2333,34 @@ void NaviNukuAdjustState::exec(Navi* navi)
 		if (mIsFollowing) {
 			transit(navi, NSID_Follow, nullptr);
 		} else {
-			transit(navi, NSID_Walk, nullptr);
+			f32 actionRadius = naviMgr->mNaviParms->mNaviParms.mAutopluckDistance.mValue;
+			f32 minDist = actionRadius * actionRadius;
+
+			Iterator<ItemPikihead::Item> iter(ItemPikihead::mgr);
+			ItemPikihead::Item* targetSprout = nullptr;
+
+			CI_LOOP(iter)
+			{
+				ItemPikihead::Item* sprout = *iter;
+				Vector3f sproutPos = sprout->getPosition();
+				Vector3f naviPos   = navi->getPosition();
+				f32 heightDiff     = FABS(sproutPos.y - naviPos.y);
+				f32 sqrXZ          = sqrDistanceXZ(sproutPos, naviPos);
+
+				if (sprout->canPullout() && sqrXZ < minDist && heightDiff < 25.0f
+					&& (!gameSystem->isVersusMode() || sprout->mColor == (1 - navi->mNaviIndex))) {
+					minDist      = sqrXZ;
+					targetSprout = sprout;
+				}
+			}
+
+			if (targetSprout) {
+				NaviNukuAdjustStateArg nukuAdjustArg;
+				navi->setupNukuAdjustArg(targetSprout, nukuAdjustArg);
+				transit(navi, NSID_NukuAdjust, &nukuAdjustArg);
+			} else {
+				transit(navi, NSID_Walk, nullptr);
+			}
 		}
 		return;
 	}
@@ -2365,6 +2434,7 @@ void NaviNukuAdjustState::exec(Navi* navi)
 		navi->mVelocity       = targetToNavi * speed;
 		navi->mTargetVelocity = Vector3f(0.0f);
 		navi->mTargetVelocity = targetToNavi * speed;
+		navi->mWhistle->update(navi->mTargetVelocity, false);
 	}
 
 	if (mWallHitCounter > 10) {
@@ -5126,6 +5196,11 @@ void NaviThrowWaitState::exec(Navi* navi)
 		}
 	}
 
+	if (navi->mController1->getButtonDown() & Controller::PRESS_B) {
+		transit(navi, NSID_Walk, nullptr);
+		return;
+	}
+
 	if (!(navi->mController1->getButton() & Controller::PRESS_A)) {
 		sortPikis(navi);
 		navi->mHoldPikiTimer = mHoldChargeLevel / 3.0f * CG_NAVIPARMS(navi).mTimeLimitForThrowing();
@@ -6021,7 +6096,9 @@ void NaviThrowState::onKeyEvent(SysShape::KeyEvent const& key)
 		} else {
 			Vector3f pos = mNavi->mWhistle->getPosition();
 			mNavi->throwPiki(mPiki, pos);
+			mPiki->mBrain->start(PikiAI::ACT_Free, nullptr);
 			mPiki->mFsm->transit(mPiki, PIKISTATE_Flying, nullptr);
+			mPiki->setFreeLightEffect(false);
 			mHasThrown = true;
 		}
 		break;
