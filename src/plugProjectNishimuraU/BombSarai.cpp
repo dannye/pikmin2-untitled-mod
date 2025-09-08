@@ -269,8 +269,10 @@ void BombSarai::Obj::supplyBomb()
 			birthArg.mFaceDir = getFaceDir();
 			Bomb::Obj* bomb   = static_cast<Bomb::Obj*>(bombMgr->birth(birthArg));
 			if (bomb) {
+				Bomb::BombInitArg initArg;
+				initArg.mIsPikiBomb = false;
 				mHeldBomb = bomb;
-				mHeldBomb->init(nullptr);
+				mHeldBomb->init(&initArg);
 				mHeldBomb->startCapture(mModel->getJoint("kamu_jnt1")->getWorldMatrix());
 				mHeldBomb->mCarrier = this;
 			}

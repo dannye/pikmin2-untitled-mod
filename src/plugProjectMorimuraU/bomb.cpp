@@ -78,6 +78,20 @@ void Obj::onInit(CreatureInitArg* initArg)
 	mBitterHitCount      = 0;
 	mCarrier             = nullptr;
 
+	mIsPikiBomb = true;
+	if (initArg) {
+		mIsPikiBomb = ((BombInitArg*)initArg)->mIsPikiBomb;
+	}
+	if (mIsPikiBomb) {
+		setScale(0.5f);
+		mCollTree->mPart->setScale(0.5f);
+		hardConstraintOn();
+	} else {
+		setScale(1.0f);
+		mCollTree->mPart->setScale(1.0f);
+		hardConstraintOff();
+	}
+
 	mFsm->start(this, BOMB_Wait, nullptr);
 
 	if (!isBirthTypeDropGroup()) {
@@ -117,6 +131,7 @@ Obj::Obj()
 	mAnimator            = new ProperAnimator;
 	setFSM(new FSM);
 	mEfxLight = new efx::TBombrockLight;
+	mIsPikiBomb = true;
 }
 
 /**
@@ -248,8 +263,13 @@ void Obj::getShadowParam(ShadowParam& param)
 	param.mPosition.y = mPosition.y + 2.0f;
 
 	param.mBoundingSphere.mPosition = Vector3f(0.0f, 1.0f, 0.0f);
-	param.mBoundingSphere.mRadius   = 30.0f;
-	param.mSize                     = 10.0f;
+	if (mIsPikiBomb) {
+		param.mBoundingSphere.mRadius = 15.0f;
+		param.mSize = 5.0f;
+	} else {
+		param.mBoundingSphere.mRadius = 30.0f;
+		param.mSize = 10.0f;
+	}
 }
 
 /**
@@ -325,7 +345,7 @@ void Obj::doEndMovie()
  */
 bool Obj::damageCallBack(Creature* creature, f32 damage, CollPart* collpart)
 {
-	if (!mHasEscapedCapture || mFloorTriangle) {
+	if ((!mHasEscapedCapture || mFloorTriangle) && !mIsPikiBomb) {
 		if (isEvent(0, EB_Bittered)) {
 			// after taking specifically 5 hits while bittered, kill the bomb. sure.
 			mBitterHitCount++;

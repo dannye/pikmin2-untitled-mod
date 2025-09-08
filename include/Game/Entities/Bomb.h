@@ -26,6 +26,12 @@ struct FSM : public EnemyStateMachine {
 	// _00-_1C	= EnemyStateMachine
 };
 
+struct BombInitArg : public CreatureInitArg {
+	virtual const char* getName() { return "BombInitArg"; }
+
+	bool mIsPikiBomb;
+};
+
 struct Obj : public EnemyBase {
 	Obj();
 
@@ -64,7 +70,7 @@ struct Obj : public EnemyBase {
 	virtual void setInitialSetting(EnemyInitialParamBase*) { } // _1C4 (weak)
 	virtual bool isLivingThing()                               // _D4 (weak)
 	{
-		if (mCaptureMatrix || !isStopMotion()) {
+		if (mCaptureMatrix || !isStopMotion() || mIsPikiBomb) {
 			return false;
 		} else {
 			return true;
@@ -103,6 +109,7 @@ struct Obj : public EnemyBase {
 	FSM* mFsm;                      // _2D0
 	efx::TBombrockLight* mEfxLight; // _2D4
 	                                // _2D8 = PelletView
+	bool mIsPikiBomb;
 };
 
 struct Mgr : public EnemyMgrBase {

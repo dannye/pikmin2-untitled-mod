@@ -661,7 +661,9 @@ void Obj::initBombOtakara()
 	birthArg.mFaceDir = mFaceDir;
 	mTargetCreature   = mgr->birth(birthArg);
 	if (mTargetCreature) {
-		mTargetCreature->init(nullptr);
+		Bomb::BombInitArg initArg;
+		initArg.mIsPikiBomb = false;
+		mTargetCreature->init(&initArg);
 		mTargetCreature->startCapture(mModel->getJoint("otakara")->getWorldMatrix());
 		static_cast<Bomb::Obj*>(mTargetCreature)->mCarrier = this;
 		mBodyHeightOffset                                  = 10.0f;
