@@ -78,7 +78,7 @@ void Obj::onInit(CreatureInitArg* initArg)
 	mBitterHitCount      = 0;
 	mCarrier             = nullptr;
 
-	mIsPikiBomb = true;
+	mIsPikiBomb = !isBirthTypeDropGroup();
 	if (initArg) {
 		mIsPikiBomb = ((BombInitArg*)initArg)->mIsPikiBomb;
 	}
@@ -131,7 +131,7 @@ Obj::Obj()
 	mAnimator            = new ProperAnimator;
 	setFSM(new FSM);
 	mEfxLight = new efx::TBombrockLight;
-	mIsPikiBomb = true;
+	mIsPikiBomb = false;
 }
 
 /**
