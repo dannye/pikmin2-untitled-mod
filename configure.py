@@ -2100,7 +2100,6 @@ config.libs = [
         "mw_version": "GC/2.6",
         "host": True,
         "objects": [
-            Object(Equivalent, "plugProjectDannyeU/navi.cpp"),
             Object(Equivalent, "plugProjectDannyeU/aiFormation.cpp"),
             Object(Equivalent, "plugProjectDannyeU/aiPickUp.cpp"),
         ],
@@ -2121,7 +2120,6 @@ def link_order_callback(module_id: int, objects: List[str]) -> List[str]:
             "plugProjectDroughtU/FastPathfinder.cpp",
             "plugProjectDroughtU/GoHereMap.cpp",
             "plugProjectDroughtU/GoHereNavi.cpp",
-            "plugProjectDannyeU/navi.cpp",
             "plugProjectDannyeU/aiFormation.cpp",
             "plugProjectDannyeU/aiPickUp.cpp",
         ]
