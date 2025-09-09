@@ -105,7 +105,7 @@ struct Obj : public EnemyBase {
 	int mBitterHitCount;            // _2C4
 	u8 mHasMadeLightEfx;            // _2C8
 	u8 mDoReduceVelocity;           // _2C9
-	EnemyBase* mCarrier;            // _2CC, enemy carrying the bomb (dweevil, dirigibug)
+	Creature* mCarrier;             // _2CC, creature carrying the bomb (dweevil, dirigibug, piki)
 	FSM* mFsm;                      // _2D0
 	efx::TBombrockLight* mEfxLight; // _2D4
 	                                // _2D8 = PelletView

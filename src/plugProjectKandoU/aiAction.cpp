@@ -44,6 +44,7 @@ Brain::Brain(Game::Piki* piki)
 	addAction(new ActTeki(piki));
 	addAction(new ActRescue(piki));
 	addAction(new ActBattle(piki));
+	addAction(new ActPickUp(piki));
 
 	mActionId = ACT_NULL;
 	mPiki     = piki;

@@ -313,8 +313,8 @@ void Obj::doStartStoneState()
  */
 void Obj::onKill(CreatureKillArg* killArg)
 {
-	if (mCarrier && mCarrier->getEnemyTypeID() == EnemyTypeID::EnemyID_BombOtakara) {
-		mCarrier->mTargetCreature = nullptr;
+	if (mCarrier && mCarrier->isTeki() && static_cast<EnemyBase*>(mCarrier)->getEnemyTypeID() == EnemyTypeID::EnemyID_BombOtakara) {
+		static_cast<EnemyBase*>(mCarrier)->mTargetCreature = nullptr;
 	}
 
 	mEfxLight->fade();

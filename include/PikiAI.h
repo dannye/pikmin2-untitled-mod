@@ -10,6 +10,8 @@
 #include "Game/SlotChangeListener.h"
 #include "Sys/Sphere.h"
 
+#include "Game/Entities/Bomb.h"
+
 namespace Sys {
 struct Triangle;
 } // namespace Sys
@@ -89,6 +91,7 @@ struct ActStickAttack;
 struct ActTeki;
 struct ActTransport;
 struct ActWeed;
+struct ActPickUp;
 
 enum PikiBrainAction {
 	ACT_NULL      = -1,
@@ -106,6 +109,7 @@ enum PikiBrainAction {
 	ACT_Teki      = 11,
 	ACT_Rescue    = 12,
 	ACT_Battle    = 13,
+	ACT_PickUp    = 14,
 	ACT_ActionCount, // total number of actions
 };
 
@@ -1375,6 +1379,23 @@ struct ActWeed : public Action {
 	bool mIsAttacking;             // _20
 	int mTargetFlockIdx;           // _24
 	Vector3f mAttackPosition;      // _28
+};
+
+struct ActPickUpArg : public ActionArg {
+	virtual const char* getName() { return "ActPickUpArg"; }
+
+	Game::Bomb::Obj* mBomb;
+};
+
+struct ActPickUp : public Action {
+	ActPickUp(Game::Piki* p);
+
+	virtual void init(ActionArg* settings);
+	virtual int exec();
+	virtual void cleanup();
+
+	Game::Bomb::Obj* mBomb;
+	ActApproachPos* mApproachPos;
 };
 
 struct Brain {

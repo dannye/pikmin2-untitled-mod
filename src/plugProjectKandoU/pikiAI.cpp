@@ -18,6 +18,8 @@
 #include "Game/generalEnemyMgr.h"
 #include "nans.h"
 
+#include "Game/Entities/Bomb.h"
+
 #define PIKI_BATTLE_RANGE   (70.0f)
 #define PIKI_RESCUE_RANGE   (140.0f)
 #define GATE_GAS_PIPE_RANGE (128.0f)
@@ -257,7 +259,25 @@ int Piki::graspSituation_Fast(Game::Creature** outTarget)
 
 		case OBJTYPE_Teki: { // can we attack the enemy?
 			EnemyBase* enemy = static_cast<EnemyBase*>(creature);
-			if (enemy->isAlive() && !enemy->isFlying() && enemy->isLivingThing() && (waterCheck || (!waterCheck && !enemy->inWater()))) {
+			if (
+				getKind() == Yellow &&
+				enemy->isAlive() &&
+				!enemy->isFlying() &&
+				!enemy->isLivingThing() &&
+				(waterCheck || (!waterCheck && !enemy->inWater())) &&
+				enemy->getEnemyTypeID() == EnemyTypeID::EnemyID_Bomb &&
+				enemy->getStateID() == Bomb::BOMB_Wait &&
+				static_cast<Bomb::Obj*>(enemy)->mIsPikiBomb &&
+				static_cast<Bomb::Obj*>(enemy)->mCarrier == nullptr
+			) {
+				Vector3f bombPos = enemy->getPosition();
+				f32 dist         = bombPos.distance(mBoundingSphere.mPosition);
+				if (dist < minDist && dist < pikiMgr->mParms->mPikiParms.mPelletSearchRange()) {
+					minDist = dist;
+					target  = enemy;
+					action  = PikiAI::ACT_PickUp;
+				}
+			} else if (enemy->isAlive() && !enemy->isFlying() && enemy->isLivingThing() && (waterCheck || (!waterCheck && !enemy->inWater()))) {
 				f32 sphereDist = enemy->calcSphereDistance(this);
 				Sys::Sphere enemySphere;
 				enemy->getBoundingSphere(enemySphere);
@@ -282,6 +302,7 @@ int Piki::graspSituation_Fast(Game::Creature** outTarget)
  */
 int Piki::graspSituation(Game::Creature** outTarget)
 {
+	P2ASSERT(false); // this function is not maintained
 	if (moviePlayer && moviePlayer->mDemoState != DEMOSTATE_Inactive) {
 		*outTarget = nullptr;
 		return PikiAI::ACT_NULL;
@@ -671,8 +692,20 @@ bool Piki::invokeAI(Game::CollEvent* event, bool check)
 			return mBrain->start(PikiAI::ACT_Attack, &attackArg);
 		}
 
-		if (static_cast<EnemyBase*>(creature)->getEnemyTypeID() == EnemyTypeID::EnemyID_Bomb) {
-			creature->isAlive(); // hm.
+		EnemyBase* enemy = static_cast<EnemyBase*>(creature);
+		if (
+			check &&
+			getKind() == Yellow &&
+			enemy->isAlive() &&
+			!enemy->isLivingThing() &&
+			enemy->getEnemyTypeID() == EnemyTypeID::EnemyID_Bomb &&
+			enemy->getStateID() == Bomb::BOMB_Wait &&
+			static_cast<Bomb::Obj*>(enemy)->mIsPikiBomb &&
+			static_cast<Bomb::Obj*>(enemy)->mCarrier == nullptr
+		) {
+			PikiAI::ActPickUpArg pickUpArg;
+			pickUpArg.mBomb = static_cast<Bomb::Obj*>(enemy);
+			return mBrain->start(PikiAI::ACT_PickUp, &pickUpArg);
 		}
 	} break;
 
@@ -908,6 +941,11 @@ bool Piki::checkInvokeAI(bool isSimpleCheck)
 		PikiAI::ActWeedArg weedArg;
 		weedArg.mWeed = static_cast<ItemWeed::Item*>(target);
 		return mBrain->start(PikiAI::ACT_Weed, &weedArg);
+
+	case PikiAI::ACT_PickUp:
+		PikiAI::ActPickUpArg pickUpArg;
+		pickUpArg.mBomb = static_cast<Bomb::Obj*>(target);
+		return mBrain->start(PikiAI::ACT_PickUp, &pickUpArg);
 	}
 
 	return false;
