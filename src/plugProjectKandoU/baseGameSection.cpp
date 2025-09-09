@@ -1456,6 +1456,16 @@ void BaseGameSection::directDraw(Graphics& gfx, Viewport* vp)
 	vp->setProjection();
 	gfx.initPrimDraw(vp->getMatrix(true));
 	doDirectDraw(gfx, vp);
+	if (naviMgr) {
+		Navi* olimar = naviMgr->getAt(NAVIID_Olimar);
+		Navi* louie = naviMgr->getAt(NAVIID_Louie);
+		if (olimar) {
+			olimar->doDirectDraw(gfx);
+		}
+		if (louie) {
+			louie->doDirectDraw(gfx);
+		}
+	}
 	if (TexCaster::Mgr::sInstance) {
 		gfx.initPrimDraw(vp->getMatrix(true));
 		mLightMgr->mFogMgr->set(gfx);
