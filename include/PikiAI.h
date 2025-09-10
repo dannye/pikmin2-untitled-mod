@@ -10,8 +10,6 @@
 #include "Game/SlotChangeListener.h"
 #include "Sys/Sphere.h"
 
-#include "Game/Entities/Bomb.h"
-
 namespace Sys {
 struct Triangle;
 } // namespace Sys
@@ -48,6 +46,10 @@ struct Item;
 namespace ItemWeed {
 struct Item;
 } // namespace ItemWeed
+
+namespace Bomb {
+struct Obj;
+} // namespace Bomb
 } // namespace Game
 
 struct Graphics;

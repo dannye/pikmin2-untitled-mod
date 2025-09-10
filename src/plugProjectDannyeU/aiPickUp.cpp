@@ -1,5 +1,7 @@
 #include "PikiAI.h"
 
+#include "Game/Entities/Bomb.h"
+
 namespace PikiAI {
 
 ActPickUp::ActPickUp(Game::Piki* piki) : Action(piki)
@@ -18,7 +20,7 @@ void ActPickUp::init(ActionArg* arg) {
 	mBomb = pickUpArg->mBomb;
 	P2ASSERT(mBomb && mBomb->mIsPikiBomb);
 
-	ApproachPosActionArg approachPosActionArg(mBomb->mPosition, mBomb->getBodyRadius() / 2.0f, -1.0f);
+	ApproachPosActionArg approachPosActionArg(mBomb->mPosition, mBomb->getBodyRadius() * mBomb->getScaleMod(), -1.0f);
 	mApproachPos->init(&approachPosActionArg);
 }
 
@@ -34,6 +36,7 @@ int ActPickUp::exec() {
 		Matrixf* captureMatrix = mParent->mModel->getJoint("sebonjnt")->getWorldMatrix();
 		mBomb->startCapture(captureMatrix);
 		mBomb->mCarrier = mParent;
+		mParent->mBomb = mBomb;
 		return ACTEXEC_Success;
 	}
 

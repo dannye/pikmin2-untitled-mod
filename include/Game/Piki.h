@@ -38,6 +38,10 @@ struct Piki;
 struct PikiState;
 struct PikiParms;
 
+namespace Bomb {
+struct Obj;
+} // namespace Bomb
+
 typedef enum EPikiKind {
 	AllPikminCalcs = -1, // used for gameStat calcs
 	FirstPikmin    = 0,
@@ -289,6 +293,7 @@ struct Piki : public FakePiki {
 	SysShape::Model* mLeafModel;      // _2BC
 	int mMgrIndex;                    // _2C0
 	Navi* mNavi;                      // _2C4
+	Bomb::Obj* mBomb;
 };
 } // namespace Game
 

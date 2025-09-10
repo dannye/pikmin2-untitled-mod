@@ -315,6 +315,8 @@ void Obj::onKill(CreatureKillArg* killArg)
 {
 	if (mCarrier && mCarrier->isTeki() && static_cast<EnemyBase*>(mCarrier)->getEnemyTypeID() == EnemyTypeID::EnemyID_BombOtakara) {
 		static_cast<EnemyBase*>(mCarrier)->mTargetCreature = nullptr;
+	} else if (mCarrier && mCarrier->isPiki()) {
+		static_cast<Piki*>(mCarrier)->mBomb = nullptr;
 	}
 
 	mEfxLight->fade();

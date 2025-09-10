@@ -261,6 +261,7 @@ int Piki::graspSituation_Fast(Game::Creature** outTarget)
 			EnemyBase* enemy = static_cast<EnemyBase*>(creature);
 			if (
 				getKind() == Yellow &&
+				mBomb == nullptr &&
 				enemy->isAlive() &&
 				!enemy->isFlying() &&
 				!enemy->isLivingThing() &&
@@ -696,6 +697,7 @@ bool Piki::invokeAI(Game::CollEvent* event, bool check)
 		if (
 			check &&
 			getKind() == Yellow &&
+			mBomb == nullptr &&
 			enemy->isAlive() &&
 			!enemy->isLivingThing() &&
 			enemy->getEnemyTypeID() == EnemyTypeID::EnemyID_Bomb &&

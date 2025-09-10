@@ -22,6 +22,8 @@
 #include "Radar.h"
 #include "nans.h"
 
+#include "Game/Entities/Bomb.h"
+
 namespace Game {
 
 Color4 Piki::pikiColors[PikiColorCount + 1]
@@ -50,6 +52,7 @@ Piki::Piki()
 	mObjectTypeID = OBJTYPE_Piki;
 	mNavi         = nullptr;
 	mCurrentState = nullptr;
+	mBomb         = nullptr;
 
 	sys->heapStatusStart("TPkEffect", nullptr);
 	mEffectsObj     = new efx::TPkEffect;
@@ -132,6 +135,7 @@ void Piki::onInit(CreatureInitArg* initArg)
 {
 	mTekiKillID = -1;
 	mNavi       = nullptr;
+	mBomb       = nullptr;
 	initColor();
 	initFakePiki();
 	setMoveVelocity(true);
@@ -255,6 +259,12 @@ void Piki::onKill(CreatureKillArg* killArg)
 	// Remove associated variables and remove from radar
 	pikiMgr->kill(this);
 	mNavi = nullptr;
+	if (mBomb) {
+		mBomb->hardConstraintOff();
+		mBomb->endCapture();
+		mBomb->mCarrier = nullptr;
+		mBomb = nullptr;
+	}
 	Radar::Mgr::exit(this);
 }
 
