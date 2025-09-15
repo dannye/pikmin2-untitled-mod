@@ -239,6 +239,7 @@ struct Piki : public FakePiki {
 	void updateGasInvincible();
 	void updateDope();
 	void updateColor();
+	void updateMatrix();
 
 	inline PikiParms* getParms() { return static_cast<PikiParms*>(mParms); }
 	inline int getKind() const { return mPikiKind; }
@@ -294,6 +295,7 @@ struct Piki : public FakePiki {
 	int mMgrIndex;                    // _2C0
 	Navi* mNavi;                      // _2C4
 	Bomb::Obj* mBomb;
+	Matrixf mCaptureMatrix;
 };
 } // namespace Game
 

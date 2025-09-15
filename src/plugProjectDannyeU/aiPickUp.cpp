@@ -33,10 +33,11 @@ int ActPickUp::exec() {
 	int approachResult = mApproachPos->exec();
 	if (approachResult == ACTEXEC_Success) {
 		// TODO: add animation
-		Matrixf* captureMatrix = mParent->mModel->getJoint("sebonjnt")->getWorldMatrix();
-		mBomb->startCapture(captureMatrix);
-		mBomb->mCarrier = mParent;
 		mParent->mBomb = mBomb;
+		mParent->updateMatrix();
+		mBomb->startCapture(&mParent->mCaptureMatrix);
+		mBomb->hardConstraintOff();
+		mBomb->mCarrier = mParent;
 		return ACTEXEC_Success;
 	}
 

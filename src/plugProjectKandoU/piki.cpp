@@ -260,7 +260,6 @@ void Piki::onKill(CreatureKillArg* killArg)
 	pikiMgr->kill(this);
 	mNavi = nullptr;
 	if (mBomb) {
-		mBomb->hardConstraintOff();
 		mBomb->endCapture();
 		mBomb->mCarrier = nullptr;
 		mBomb = nullptr;
@@ -302,6 +301,10 @@ void Piki::update()
 
 	if (!isMovieActor() || isMovieExtra()) {
 		mFsm->exec(this);
+
+		if (mBomb) {
+			updateMatrix();
+		}
 	}
 
 	if (isAlive()) {
@@ -1189,6 +1192,12 @@ void Piki::initColor()
 void Piki::updateColor()
 {
 	// UNUSED FUNCTION
+}
+
+void Piki::updateMatrix()
+{
+	mCaptureMatrix = *mModel->getJoint("sebonjnt")->getWorldMatrix();
+	mCaptureMatrix *= mBomb->mScaleModifier;
 }
 
 /**
