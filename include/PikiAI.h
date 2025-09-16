@@ -1389,15 +1389,23 @@ struct ActPickUpArg : public ActionArg {
 	Game::Bomb::Obj* mBomb;
 };
 
-struct ActPickUp : public Action {
+struct ActPickUp : public Action, virtual SysShape::MotionListener {
+	enum PickUpState {
+		PICKUP_Walk = 0,
+		PICKUP_Lift = 1,
+	};
+
 	ActPickUp(Game::Piki* p);
 
 	virtual void init(ActionArg* settings);
 	virtual int exec();
 	virtual void cleanup();
+	virtual void onKeyEvent(const SysShape::KeyEvent& event);
 
 	Game::Bomb::Obj* mBomb;
 	ActApproachPos* mApproachPos;
+	bool mAnimFinished;
+	PickUpState mState;
 };
 
 struct Brain {

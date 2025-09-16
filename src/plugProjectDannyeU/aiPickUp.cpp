@@ -22,28 +22,60 @@ void ActPickUp::init(ActionArg* arg) {
 
 	ApproachPosActionArg approachPosActionArg(mBomb->mPosition, mBomb->getBodyRadius() * mBomb->getScaleMod(), -1.0f);
 	mApproachPos->init(&approachPosActionArg);
+	mAnimFinished = false;
+	mState = PICKUP_Walk;
+
+	mParent->mSoundObj->startSound(PSSE_PK_VC_FIND, 0);
 }
 
 int ActPickUp::exec() {
-	if (mBomb == nullptr || !mBomb->isAlive() || mBomb->getStateID() != Game::Bomb::BOMB_Wait || mBomb->mCarrier) {
+	if (mBomb == nullptr || !mBomb->isAlive() || mBomb->getStateID() != Game::Bomb::BOMB_Wait || (mBomb->mCarrier && mBomb->mCarrier != mParent)) {
+		P2ASSERT(!mParent->mBomb);
 		return ACTEXEC_Fail;
 	}
 
-	mApproachPos->mGoalPosition = mBomb->mPosition;
-	int approachResult = mApproachPos->exec();
-	if (approachResult == ACTEXEC_Success) {
-		// TODO: add animation
-		mParent->mBomb = mBomb;
-		mParent->updateMatrix();
-		mBomb->startCapture(&mParent->mCaptureMatrix);
-		mBomb->hardConstraintOff();
-		mBomb->mCarrier = mParent;
-		return ACTEXEC_Success;
+	switch (mState) {
+	case PICKUP_Walk: {
+		mApproachPos->mGoalPosition = mBomb->mPosition;
+		int approachResult = mApproachPos->exec();
+		if (approachResult == ACTEXEC_Success) {
+			mParent->mBomb = mBomb;
+			mParent->updateMatrix();
+			mBomb->startCapture(&mParent->mCaptureMatrix);
+			mBomb->hardConstraintOff();
+			mBomb->mCarrier = mParent;
+
+			mAnimFinished = false;
+			mParent->startMotion(Game::IPikiAnims::PICK_PUT, Game::IPikiAnims::PICK_PUT, this, nullptr);
+			mParent->enableMotionBlend();
+			mParent->mTargetVelocity = Vector3f(0.0f);
+			mParent->mSoundObj->startSound(PSSE_PK_VC_YATTA, 0);
+			mState = PICKUP_Lift;
+		}
+		break;
+	}
+	case PICKUP_Lift: {
+		if (mAnimFinished || !mParent->assertMotion(Game::IPikiAnims::PICK_PUT)) {
+			return ACTEXEC_Success;
+		}
+		break;
+	}
 	}
 
 	return ACTEXEC_Continue;
 }
 
 void ActPickUp::cleanup() {}
+
+void ActPickUp::onKeyEvent(SysShape::KeyEvent const& keyEvent)
+{
+	switch (keyEvent.mType) {
+	case KEYEVENT_LOOP_START:
+		mAnimFinished = true;
+		break;
+	default:
+		break;
+	}
+}
 
 } // namespace PikiAI

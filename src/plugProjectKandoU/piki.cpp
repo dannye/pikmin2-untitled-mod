@@ -1196,7 +1196,8 @@ void Piki::updateColor()
 
 void Piki::updateMatrix()
 {
-	mCaptureMatrix = *mModel->getJoint("sebonjnt")->getWorldMatrix();
+	mCaptureMatrix = *mModel->getJoint("headjnt")->getWorldMatrix();
+	mCaptureMatrix.setColumn(3, mCaptureMatrix.getColumn(3) + Vector3f(0.0f, 5.0f, 0.0f));
 	mCaptureMatrix *= mBomb->mScaleModifier;
 }
 
