@@ -273,7 +273,7 @@ int Piki::graspSituation_Fast(Game::Creature** outTarget)
 			) {
 				Vector3f bombPos = enemy->getPosition();
 				f32 dist         = bombPos.distance(mBoundingSphere.mPosition);
-				if (dist < minDist && dist < pikiMgr->mParms->mPikiParms.mPelletSearchRange()) {
+				if (dist < minDist && dist < pikiMgr->mParms->mPikiParms.mBridgeSearchRange()) {
 					minDist = dist;
 					target  = enemy;
 					action  = PikiAI::ACT_PickUp;
