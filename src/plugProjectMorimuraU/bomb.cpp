@@ -83,8 +83,8 @@ void Obj::onInit(CreatureInitArg* initArg)
 		mIsPikiBomb = ((BombInitArg*)initArg)->mIsPikiBomb;
 	}
 	if (mIsPikiBomb) {
-		setScale(0.5f);
-		mCollTree->mPart->setScale(0.5f);
+		setScale(0.4f);
+		mCollTree->mPart->setScale(0.4f);
 		hardConstraintOn();
 	} else {
 		setScale(1.0f);
@@ -263,13 +263,8 @@ void Obj::getShadowParam(ShadowParam& param)
 	param.mPosition.y = mPosition.y + 2.0f;
 
 	param.mBoundingSphere.mPosition = Vector3f(0.0f, 1.0f, 0.0f);
-	if (mIsPikiBomb) {
-		param.mBoundingSphere.mRadius = 15.0f;
-		param.mSize = 5.0f;
-	} else {
-		param.mBoundingSphere.mRadius = 30.0f;
-		param.mSize = 10.0f;
-	}
+	param.mBoundingSphere.mRadius   = 30.0f * mScaleModifier;
+	param.mSize                     = 10.0f * mScaleModifier;
 }
 
 /**

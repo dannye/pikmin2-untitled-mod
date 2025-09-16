@@ -1196,8 +1196,22 @@ void Piki::updateColor()
 
 void Piki::updateMatrix()
 {
-	mCaptureMatrix = *mModel->getJoint("headjnt")->getWorldMatrix();
-	mCaptureMatrix.setColumn(3, mCaptureMatrix.getColumn(3) + Vector3f(0.0f, 5.0f, 0.0f));
+	Vector3f leftHand  = mModel->getJoint("lhandjnt")->getWorldMatrix()->getColumn(3);
+	Vector3f rightHand = mModel->getJoint("rhandjnt")->getWorldMatrix()->getColumn(3);
+	Vector3f middle    = Vector3f::middle(leftHand, rightHand);
+	Vector3f forward   = Vector3f(rightHand.z - leftHand.z, 0.0f, -(rightHand.x - leftHand.x)); forward.normalise2D();
+	Vector3f up        = Vector3f(0.0f, 1.0f, 0.0f);
+
+	if (getStateID() == PIKISTATE_Hanged) {
+		forward *= 0.25f;
+		up      *= 1.0f;
+	} else {
+		forward *= 2.0f;
+		up      *= 3.0f;
+	}
+
+	mCaptureMatrix = *mModel->getJoint("sebonjnt")->getWorldMatrix();
+	mCaptureMatrix.setColumn(3, middle + forward + up);
 	mCaptureMatrix *= mBomb->mScaleModifier;
 }
 
@@ -1303,7 +1317,20 @@ void Piki::doDebugDL()
  */
 void Piki::startMotion(int animIdx1, int animIdx2, SysShape::MotionListener* listener1, SysShape::MotionListener* listener2)
 {
+	bool blend = false;
 	switch (animIdx1) {
+	case IPikiAnims::IRAIRA:
+	case IPikiAnims::NIGERU:
+	case IPikiAnims::RUN2:
+	case IPikiAnims::WALK:
+	case IPikiAnims::WAIT:
+	case IPikiAnims::SUWARU:
+		if (mBomb) {
+			animIdx1 = IPikiAnims::PICK_PUT;
+			animIdx2 = IPikiAnims::PICK_PUT;
+			blend = true;
+		}
+		break;
 	case IPikiAnims::JUMP:
 		if (randFloat() < 0.2f) {
 			startSound(PSSE_PK_VC_JUMP1, PSGame::SeMgr::SETSE_Unk0);
@@ -1320,6 +1347,8 @@ void Piki::startMotion(int animIdx1, int animIdx2, SysShape::MotionListener* lis
 	}
 
 	FakePiki::startMotion(animIdx1, animIdx2, listener1, listener2);
+
+	if (blend) enableMotionBlend();
 }
 
 /**
