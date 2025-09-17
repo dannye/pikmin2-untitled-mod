@@ -624,6 +624,20 @@ bool Piki::invokeAI(Game::CollEvent* event, bool check)
 		formCheck = false;
 	}
 
+	if (
+		creature->mObjectTypeID == OBJTYPE_Honey &&
+		getHappa() != Flower &&
+		static_cast<ItemHoney::Item*>(creature)->mHoneyType == HONEY_Y &&
+		static_cast<ItemHoney::Item*>(creature)->absorbable()
+	) {
+		AbsorbStateArg absorbArg;
+		absorbArg.mCreature = creature;
+		mFsm->transit(this, PIKISTATE_Absorb, &absorbArg);
+		return true;
+	}
+
+	if (mBomb) return false;
+
 	if (formCheck && creature->isAlive() && creature->getFlockMgr() && creature->getFlockMgr()->isAttackable()) {
 		PikiAI::ActWeedArg weedArg;
 		weedArg.mWeed = static_cast<ItemWeed::Item*>(creature);
@@ -638,16 +652,6 @@ bool Piki::invokeAI(Game::CollEvent* event, bool check)
 			attackArg.mCollPart = nullptr;
 
 			return mBrain->start(PikiAI::ACT_Attack, &attackArg);
-		}
-	} break;
-
-	case OBJTYPE_Honey: {
-		if (getHappa() != Flower && static_cast<ItemHoney::Item*>(creature)->mHoneyType == HONEY_Y
-		    && static_cast<ItemHoney::Item*>(creature)->absorbable()) {
-			AbsorbStateArg absorbArg;
-			absorbArg.mCreature = creature;
-			mFsm->transit(this, PIKISTATE_Absorb, &absorbArg);
-			return true;
 		}
 	} break;
 
@@ -796,6 +800,8 @@ bool Piki::invokeAI(Game::CollEvent* event, bool check)
  */
 bool Piki::invokeAI(Game::PlatEvent* event)
 {
+	if (mBomb) return false;
+
 	BaseItem* item = event->mInstance->mItem;
 
 	switch (item->mObjectTypeID) {
@@ -873,6 +879,8 @@ bool Piki::invokeAIFree(Game::Piki::InvokeAIFreeArg& arg)
  */
 bool Piki::checkInvokeAI(bool isSimpleCheck)
 {
+	if (mBomb) return false;
+
 	Game::Creature* target = nullptr;
 	int action;
 	if (sGraspSituationOptimise) {

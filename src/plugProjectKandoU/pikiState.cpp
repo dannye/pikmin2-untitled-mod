@@ -3250,7 +3250,7 @@ void PikiFlyingState::collisionCallback(Piki* piki, CollEvent& event)
 		}
 
 		if (!pressCheck) {
-			if (event.mCollisionObj && event.mCollisionObj->isStickable() && creature->isLivingThing()) {
+			if (event.mCollisionObj && event.mCollisionObj->isStickable() && creature->isLivingThing() && !piki->mBomb) {
 				piki->startStick(event.mCollidingCreature, event.mCollisionObj);
 				piki->startSound(event.mCollidingCreature, PSSE_PK_SE_ATTACH, true);
 			} else {
@@ -3260,7 +3260,7 @@ void PikiFlyingState::collisionCallback(Piki* piki, CollEvent& event)
 		}
 	}
 
-	if (creature->mObjectTypeID == OBJTYPE_Plant && event.mCollisionObj && event.mCollisionObj->mCurrentID.match('tops', '*')) {
+	if (creature->mObjectTypeID == OBJTYPE_Plant && event.mCollisionObj && event.mCollisionObj->mCurrentID.match('tops', '*') && !piki->mBomb) {
 		piki->startStick(event.mCollidingCreature, event.mCollisionObj);
 		piki->startSound(event.mCollidingCreature, PSSE_PK_SE_ATTACH, true);
 
