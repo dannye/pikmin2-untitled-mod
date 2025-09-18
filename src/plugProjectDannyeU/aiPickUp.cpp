@@ -20,7 +20,7 @@ void ActPickUp::init(ActionArg* arg) {
 	mBomb = pickUpArg->mBomb;
 	P2ASSERT(mBomb && mBomb->mIsPikiBomb);
 
-	ApproachPosActionArg approachPosActionArg(mBomb->mPosition, mBomb->getBodyRadius() * mBomb->getScaleMod() - mParent->getBodyRadius(), -1.0f);
+	ApproachPosActionArg approachPosActionArg(mBomb->mPosition, mBomb->getBodyRadius() * mBomb->getScaleMod() * 0.4f, -1.0f);
 	mApproachPos->init(&approachPosActionArg);
 	mAnimFinished = false;
 	mState = PICKUP_Walk;

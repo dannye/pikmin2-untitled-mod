@@ -4342,6 +4342,8 @@ void NaviThrowWaitState::lockHangPiki(Navi* navi)
 		Vector3f pos;
 		pos = part->mPosition;
 		pos.y -= 6.0f;
+		mHeldPiki->mAnimator.mBoundAnimator.setModelCalc(mHeldPiki->mModel, 0);
+		mHeldPiki->mAnimator.mSelfAnimator.setModelCalc(mHeldPiki->mModel, 4);
 		mHeldPiki->setPosition(pos, false);
 	}
 }

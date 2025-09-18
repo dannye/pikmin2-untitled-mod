@@ -115,7 +115,7 @@ int ActFree::exec()
 		// If the delay timer is done we have a 50/50 chance of starting a boredom state
 		if (mDelayTimer) {
 			mDelayTimer--;
-		} else if (randFloat() > 0.5f) {
+		} else if (!mParent->mBomb && randFloat() > 0.5f) {
 			mBore->init(nullptr);
 			mState = PIKIAI_FREE_BORE;
 		}
