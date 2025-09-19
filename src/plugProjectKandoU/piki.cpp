@@ -286,6 +286,16 @@ void Piki::getLODSphere(Sys::Sphere& sphere)
 	sphere.mRadius   = 15.0f;
 }
 
+void Piki::doSimulation(f32 rate)
+{
+	FakePiki::doSimulation(rate);
+
+	if (mBomb) {
+		updateMatrix();
+		mBomb->doAnimationCullingOff();
+	}
+}
+
 /**
  * @note Address: 0x801484D8
  * @note Size: 0x210
@@ -301,10 +311,6 @@ void Piki::update()
 
 	if (!isMovieActor() || isMovieExtra()) {
 		mFsm->exec(this);
-
-		if (mBomb) {
-			updateMatrix();
-		}
 	}
 
 	if (isAlive()) {

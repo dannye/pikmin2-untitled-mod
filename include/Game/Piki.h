@@ -189,6 +189,7 @@ struct Piki : public FakePiki {
 	virtual void do_updateLookCreature();                     // _214
 	virtual void onSetPosition();                             // _218
 	virtual bool isWalking();                                 // _21C
+	virtual void doSimulation(f32);
 
 	void attachRadar(bool);
 	bool canVsBattle();
