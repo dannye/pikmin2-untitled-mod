@@ -31,6 +31,8 @@
 #include "PowerPC_EABI_Support/MSL_C/MSL_Common/arith.h"
 #include "P2JME/P2JME.h"
 
+#include "Game/Entities/Bomb.h"
+
 static const u32 fillerbytes[3] = { 0, 0, 0 };
 int numSearch;
 
@@ -3811,6 +3813,12 @@ void Navi::enterAllPikis()
 		}
 
 		if (target) {
+			if (piki->mBomb) {
+				piki->mBomb->endCapture();
+				piki->mBomb->mHasEscapedCapture = 0;
+				piki->mBomb->mCarrier = nullptr;
+				piki->mBomb = nullptr;
+			}
 			PikiAI::CreatureActionArg arg(target);
 			piki->mBrain->start(PikiAI::ACT_Enter, &arg);
 		}

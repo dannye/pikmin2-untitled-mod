@@ -27,6 +27,8 @@
 #include "utilityU.h"
 #include "JSystem/JUtility/JUTGamePad.h"
 
+#include "Game/Entities/Bomb.h"
+
 #include "Drought/Game/NaviGoHere.h"
 
 int unusedNaviStateArray[] = { 1, 2, 3, 0 }; // ?
@@ -3551,6 +3553,12 @@ void NaviContainerState::enterPikis(Navi* navi, int maxPikis)
 	}
 
 	for (int i = 0; i < pikiNum; i++) {
+		if (pikis[i]->mBomb) {
+			pikis[i]->mBomb->endCapture();
+			pikis[i]->mBomb->mHasEscapedCapture = 0;
+			pikis[i]->mBomb->mCarrier = nullptr;
+			pikis[i]->mBomb = nullptr;
+		}
 		PikiAI::CreatureActionArg arg(mOnyon);
 		pikis[i]->mBrain->start(PikiAI::ACT_Enter, &arg);
 	}

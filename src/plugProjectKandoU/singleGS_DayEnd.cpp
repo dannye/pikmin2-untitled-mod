@@ -22,6 +22,8 @@
 #include "utilityU.h"
 #include "nans.h"
 
+#include "Game/Entities/Bomb.h"
+
 static const u32 padding[]    = { 0, 0, 0 };
 static const char className[] = "singleGS_DayEnd";
 
@@ -220,6 +222,9 @@ void DayEndState::onMovieStart(SingleGameSection* game, MovieConfig* movie, u32,
 				arg.mIsDemoFollow = true;
 				piki->mBrain->start(PikiAI::ACT_Formation, &arg);
 				piki->movie_begin(false);
+				if (piki->mBomb) {
+					piki->mBomb->movie_begin(false);
+				}
 			}
 		}
 	} else {
