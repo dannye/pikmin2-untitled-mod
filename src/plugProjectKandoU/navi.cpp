@@ -4119,6 +4119,12 @@ void Navi::holeinAllPikis(Vector3f& pos)
 
 	for (int i = 0; i < pikis; i++) {
 		Piki* piki = buffer[i];
+		if (piki->mBomb) {
+			piki->mBomb->endCapture();
+			piki->mBomb->mHasEscapedCapture = 0;
+			piki->mBomb->mCarrier = nullptr;
+			piki->mBomb = nullptr;
+		}
 		HoleinStateArg arg(pos);
 		piki->mFsm->transit(piki, PIKISTATE_Holein, &arg);
 	}
@@ -4151,6 +4157,12 @@ void Navi::fountainonAllPikis(Vector3f& pos)
 
 	for (int i = 0; i < pikis; i++) {
 		Piki* piki = buffer[i];
+		if (piki->mBomb) {
+			piki->mBomb->endCapture();
+			piki->mBomb->mHasEscapedCapture = 0;
+			piki->mBomb->mCarrier = nullptr;
+			piki->mBomb = nullptr;
+		}
 		FountainonStateArg arg(pos);
 		piki->mFsm->transit(piki, PIKISTATE_Fountainon, &arg);
 	}

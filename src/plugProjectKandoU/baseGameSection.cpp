@@ -34,6 +34,8 @@
 #include "PikiAI.h"
 #include "nans.h"
 
+#include "Game/Entities/Bomb.h"
+
 namespace og {
 namespace Screen {
 
@@ -1260,6 +1262,9 @@ void BaseGameSection::prepareHoleIn(Vector3f& suroundPos, bool killPikihead)
 				arg.mIsDemoFollow = true;
 				piki->mBrain->start(PikiAI::ACT_Formation, &arg);
 				piki->movie_begin(false);
+				if (piki->mBomb) {
+					piki->mBomb->movie_begin(false);
+				}
 			}
 		}
 	}
@@ -1321,6 +1326,9 @@ void BaseGameSection::prepareFountainOn(Vector3f& suroundPos)
 
 			piki->mBrain->start(PikiAI::ACT_Formation, &arg);
 			piki->movie_begin(false);
+			if (piki->mBomb) {
+				piki->mBomb->movie_begin(false);
+			}
 		}
 	}
 	if (aliveOrima) {
