@@ -262,7 +262,7 @@ void Piki::onKill(CreatureKillArg* killArg)
 	if (mBomb) {
 		mBomb->endCapture();
 		mBomb->mCarrier = nullptr;
-		if (getStateID() == PIKISTATE_Swallowed) {
+		if (getStateID() == PIKISTATE_Swallowed || getStateID() == PIKISTATE_Suikomi) {
 			mBomb->mHealth = 0.0f;
 			mBomb->forceBomb(true);
 		}
