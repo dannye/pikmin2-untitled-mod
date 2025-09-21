@@ -86,10 +86,14 @@ void Obj::onInit(CreatureInitArg* initArg)
 		setScale(0.4f);
 		mCollTree->mPart->setScale(0.4f);
 		hardConstraintOn();
+		mHealth    = 2.0f;
+		mMaxHealth = 2.0f;
 	} else {
 		setScale(1.0f);
 		mCollTree->mPart->setScale(1.0f);
 		hardConstraintOff();
+		mHealth    = getParms().mHealth.mValue;
+		mMaxHealth = getParms().mHealth.mValue;
 	}
 
 	mFsm->start(this, BOMB_Wait, nullptr);
@@ -428,11 +432,14 @@ void Obj::collisionCallback(CollEvent& collEvent)
  * @note Address: 0x8034B0D0
  * @note Size: 0x60
  */
-void Obj::forceBomb()
+void Obj::forceBomb(bool immediate)
 {
 	if (getStateID() == BOMB_Wait) {
 		disableEvent(0, EB_Invulnerable);
 		mFsm->transit(this, BOMB_Bomb, nullptr);
+		if (immediate) {
+			static_cast<State*>(mFsm->getCurrState(this))->mExplodeDelayTimer = 10;
+		}
 	}
 }
 

@@ -262,6 +262,10 @@ void Piki::onKill(CreatureKillArg* killArg)
 	if (mBomb) {
 		mBomb->endCapture();
 		mBomb->mCarrier = nullptr;
+		if (getStateID() == PIKISTATE_Swallowed) {
+			mBomb->mHealth = 0.0f;
+			mBomb->forceBomb(true);
+		}
 		mBomb = nullptr;
 	}
 	Radar::Mgr::exit(this);

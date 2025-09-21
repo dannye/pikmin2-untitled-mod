@@ -154,8 +154,9 @@ void StateBomb::exec(EnemyBase* enemy)
 			{
 				Creature* creature = static_cast<Creature*>(*iterator);
 				if (creature->isAlive() && (creature != enemy)) {
-					Vector3f creaturePos = creature->getPosition();
-					if (!(creaturePos.y > max) && !(creaturePos.y < min)) {
+					Sys::Sphere sphere;
+					creature->getBoundingSphere(sphere);
+					if (!(sphere.mPosition.y - sphere.mRadius > max) && !(sphere.mPosition.y + sphere.mRadius < min)) {
 						if (creature->isTeki()) {
 
 							f32 weight = 1.0f;

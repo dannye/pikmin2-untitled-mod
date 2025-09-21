@@ -91,7 +91,7 @@ struct Obj : public EnemyBase {
 	}
 	//////////////// VTABLE END
 
-	void forceBomb();
+	void forceBomb(bool immediate = false);
 	void bombEffInWater();
 	bool canEat();
 	bool isAnimStart();
