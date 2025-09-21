@@ -21,6 +21,8 @@
 #include "Game/AIConstants.h"
 #include "nans.h"
 
+#include "Game/Entities/Bomb.h"
+
 namespace Game {
 
 static const int unusedInteractPikiArray[] = { 0, 0, 0 };
@@ -196,6 +198,19 @@ bool InteractFue::actPiki(Game::Piki* piki)
 				if ((pikiColor == Red && whistlingNavi->mNaviIndex == NAVIID_Louie)
 				    || (pikiColor == Blue && whistlingNavi->mNaviIndex == NAVIID_Olimar)) {
 					return false;
+				}
+			}
+			if (piki->getStateID() == PIKISTATE_Walk && mWhistled) {
+				PikiWalkState* walkState = static_cast<PikiWalkState*>(piki->getCurrState());
+				if (walkState->mPrimed) {
+					if (piki->mBomb) {
+						OSReport("dropping the bomb...\n");
+						piki->mBomb->endCapture();
+						piki->mBomb->mCarrier = nullptr;
+						piki->mBomb = nullptr;
+					}
+					walkState->mPrimed = false;
+					piki->setDopeEffect(false);
 				}
 			}
 			if (piki->getCurrAction()) {

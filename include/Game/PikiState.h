@@ -846,6 +846,10 @@ struct PikiTaneState : public PikiState {
 	f32 mVerticalDrag;   // _14
 };
 
+struct WalkStateArg : public StateArg {
+	bool mPrimed;
+};
+
 struct PikiWalkState : public PikiState {
 	inline PikiWalkState()
 	    : PikiState(PIKISTATE_Walk, "WALK")
@@ -864,6 +868,9 @@ struct PikiWalkState : public PikiState {
 
 	// _00     = VTBL
 	// _00-_10 = PikiState
+
+	bool mPrimed;
+	f32  mPrimedTimer;
 };
 
 struct WaterHangedStateArg : public StateArg {

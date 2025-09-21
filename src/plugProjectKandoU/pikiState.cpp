@@ -139,6 +139,16 @@ void PikiFSM::transitForce(Piki* piki, int stateID, StateArg* stateArg)
  */
 void PikiWalkState::init(Piki* piki, StateArg* stateArg)
 {
+	mPrimed = false;
+	if (stateArg) {
+		WalkStateArg* walkArg = static_cast<WalkStateArg*>(stateArg);
+		mPrimed = walkArg->mPrimed;
+	}
+	if (mPrimed) {
+		piki->setDopeEffect(true);
+		piki->mSoundObj->startSound(PSSE_PK_VC_DOPING, 0);
+	}
+	mPrimedTimer = 0.0f;
 	piki->startMotion(IPikiAnims::WAIT, IPikiAnims::WAIT, nullptr, nullptr);
 }
 
@@ -148,6 +158,14 @@ void PikiWalkState::init(Piki* piki, StateArg* stateArg)
  */
 void PikiWalkState::exec(Piki* piki)
 {
+	if (mPrimed) {
+		mPrimedTimer += sys->mDeltaTime;
+		if (mPrimedTimer >= 5.0f) {
+			mPrimed = false;
+			piki->setDopeEffect(false);
+			piki->mSoundObj->startSound(PSSE_PK_VC_DOPE_END, 0);
+		}
+	}
 	piki->mBrain->exec();
 }
 
@@ -157,6 +175,9 @@ void PikiWalkState::exec(Piki* piki)
  */
 void PikiWalkState::cleanup(Piki* piki)
 {
+	if (mPrimed) {
+		piki->setDopeEffect(false);
+	}
 }
 
 /**
@@ -3214,7 +3235,9 @@ void PikiFlyingState::init(Piki* piki, StateArg* stateArg)
  */
 void PikiFlyingState::bounceCallback(Piki* piki, Sys::Triangle* triangle)
 {
-	transit(piki, PIKISTATE_Walk, nullptr);
+	WalkStateArg arg;
+	arg.mPrimed = piki->mBomb != nullptr;
+	transit(piki, PIKISTATE_Walk, &arg);
 	if (!piki->invokeAI()) {
 		piki->mBrain->start(PikiAI::ACT_Free, nullptr);
 	}
@@ -3272,7 +3295,9 @@ void PikiFlyingState::collisionCallback(Piki* piki, CollEvent& event)
 		piki->mBrain->start(PikiAI::ACT_Crop, &cropArg);
 
 	} else if (piki->getStateID() == PIKISTATE_Flying && creature->isCollisionFlick()) {
-		transit(piki, PIKISTATE_Walk, nullptr);
+		WalkStateArg arg;
+		arg.mPrimed = piki->mBomb != nullptr;
+		transit(piki, PIKISTATE_Walk, &arg);
 		if (!piki->invokeAI(&event, true)) {
 			piki->mBrain->start(PikiAI::ACT_Free, nullptr);
 		}

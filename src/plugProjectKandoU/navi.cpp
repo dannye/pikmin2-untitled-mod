@@ -3396,7 +3396,7 @@ void Navi::callPikis()
 
 		last = piki;
 		if (piki && piki != this) {
-			InteractFue act(this, false, true); // don't combine parties, is new to party
+			InteractFue act(this, false, true, true); // don't combine parties, is new to party, whistled
 			piki->stimulate(act);
 		}
 	}

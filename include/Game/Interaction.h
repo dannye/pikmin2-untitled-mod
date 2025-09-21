@@ -292,6 +292,15 @@ struct InteractFue : public Interaction {
 	    : Interaction(parent)
 	    , mDoCombineParties(doCombineParties)
 	    , mIsNewToParty(isNewToParty)
+	    , mWhistled(false)
+	{
+	}
+
+	inline InteractFue(Creature* parent, bool doCombineParties, bool isNewToParty, bool whistled)
+	    : Interaction(parent)
+	    , mDoCombineParties(doCombineParties)
+	    , mIsNewToParty(isNewToParty)
+	    , mWhistled(whistled)
 	{
 	}
 
@@ -303,6 +312,7 @@ struct InteractFue : public Interaction {
 	// _04 = Creature*
 	bool mDoCombineParties; // _08, always false unless whistling another captain that has pikmin
 	bool mIsNewToParty;     // _09, always true unless we're swapping between captains in a two-captain party
+	bool mWhistled;
 };
 
 struct InteractFueFuki : public Interaction {
