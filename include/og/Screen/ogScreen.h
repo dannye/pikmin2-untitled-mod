@@ -92,9 +92,11 @@ void TagToName(u64, char*);
 // Unused
 void setBlendPane(J2DBlendInfo, J2DScreen*, u64*);
 
-extern const char* PikiIconTextureName[19];
+#define NUM_PIKI_ICONS (22)
 
-extern ResTIMG* PikiIconTextureResTIMG[19];
+extern const char* PikiIconTextureName[NUM_PIKI_ICONS];
+
+extern ResTIMG* PikiIconTextureResTIMG[NUM_PIKI_ICONS];
 
 } // namespace Screen
 } // namespace og

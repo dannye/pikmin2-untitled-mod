@@ -4427,13 +4427,16 @@ void NaviThrowWaitState::exec(Navi* navi)
 	if (navi->mController1->getButtonDown() & Controller::PRESS_DPAD_RIGHT) {
 		mCurrHappa    = -1;
 		int currColor = mHeldPiki->getKind();
-		int pikisNext[(PikiColorCount - 1)];
-		for (int i = 0; i < (PikiColorCount - 1); i++) {
-			pikisNext[i] = ((currColor + i + 1) % PikiColorCount);
+		if (mHeldPiki->mBomb) {
+			currColor = BombPikmin;
+		}
+		int pikisNext[PikiColorCount];
+		for (int i = 0; i < PikiColorCount; i++) {
+			pikisNext[i] = ((currColor + i + 1) % (PikiColorCount + 1));
 		}
 
 		Piki* newPiki = nullptr;
-		for (int i = 0; i < (PikiColorCount - 1); i++) {
+		for (int i = 0; i < PikiColorCount; i++) {
 			Piki* p = findNearestColorPiki(navi, pikisNext[i]);
 			if (p) {
 				newPiki = p;
@@ -4462,13 +4465,16 @@ void NaviThrowWaitState::exec(Navi* navi)
 	} else if (navi->mController1->getButtonDown() & Controller::PRESS_DPAD_LEFT) {
 		mCurrHappa    = -1;
 		int currColor = mHeldPiki->getKind();
-		int pikisNext[(PikiColorCount - 1)];
-		for (int i = 0; i < (PikiColorCount - 1); i++) {
-			pikisNext[i] = ((currColor + ((PikiColorCount - 2) - i) + 1) % PikiColorCount);
+		if (mHeldPiki->mBomb) {
+			currColor = BombPikmin;
+		}
+		int pikisNext[PikiColorCount];
+		for (int i = 0; i < PikiColorCount; i++) {
+			pikisNext[i] = ((currColor + ((PikiColorCount - 1) - i) + 1) % (PikiColorCount + 1));
 		}
 
 		Piki* newPiki = nullptr;
-		for (int i = 0; i < (PikiColorCount - 1); i++) {
+		for (int i = 0; i < PikiColorCount; i++) {
 			Piki* p = findNearestColorPiki(navi, pikisNext[i]);
 			if (p) {
 				newPiki = p;
@@ -4497,6 +4503,9 @@ void NaviThrowWaitState::exec(Navi* navi)
 	           || navi->mController1->getButtonDown() & Controller::PRESS_DPAD_DOWN) {
 		bool isButton = navi->mController1->isButtonDown(Controller::PRESS_DPAD_DOWN);
 		int currColor = mHeldPiki->mPikiKind;
+		if (mHeldPiki->mBomb) {
+			currColor = BombPikmin;
+		}
 		int currHappa = mHeldPiki->mHappaKind;
 		Piki* newPiki;
 		for (int i = 0; i < MaxHappaStage; i++) {
@@ -4577,13 +4586,14 @@ void NaviThrowWaitState::exec(Navi* navi)
  */
 Piki* NaviThrowWaitState::findNearestColorPiki(Navi* navi, int color)
 {
+	bool bomb = color == BombPikmin;
 	f32 minDist   = 140.0f;
 	Piki* retpiki = nullptr;
 	Iterator<Creature> iterator(navi->mCPlateMgr);
 	CI_LOOP(iterator)
 	{
 		Piki* piki = static_cast<Piki*>(*iterator);
-		if (piki->getKind() == color && (mCurrHappa == -1 || mCurrHappa == piki->getHappa())) {
+		if (((!bomb && !piki->mBomb && piki->getKind() == color) || (bomb && piki->mBomb)) && (mCurrHappa == -1 || mCurrHappa == piki->getHappa())) {
 			Vector3f diff = piki->getPosition() - navi->getPosition();
 			f32 dist      = diff.length();
 			if (dist < minDist && piki->getStateID() == PIKISTATE_Walk && piki->isThrowable()) {
