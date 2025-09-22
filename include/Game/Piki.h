@@ -58,6 +58,7 @@ typedef enum EPikiKind {
 	Bulbmin   = 5,
 	Carrot    = 6,
 	PikiColorCount, // 7
+	BombPikmin = 7,
 } EPikiKind;
 
 typedef enum EPikiHappa {

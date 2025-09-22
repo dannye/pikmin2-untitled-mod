@@ -4247,14 +4247,14 @@ bool Navi::releasePikis()
 	}
 	for (int cColor = 0; cColor < 8; cColor++) {
 		for (int i = 0; i < pikis; i++) {
-			if (cColor != Yellow) {
-				if (cColor == buffer[i]->getKind()) {
+			if (buffer[i]->getKind() == cColor) {
+				if (!buffer[i]->mBomb) {
 					number[cColor]++;
 					position[cColor] += buffer[i]->getPosition();
-				} // WHY WHAT WHY / WHY IS YELLOW SPECIAL
-			} else if (buffer[i]->getKind() == Yellow) {
-				number[Yellow]++;
-				position[Yellow] += buffer[i]->getPosition();
+				} else {
+					number[BombPikmin]++;
+					position[BombPikmin] += buffer[i]->getPosition();
+				}
 			}
 		}
 	}
@@ -4310,7 +4310,16 @@ bool Navi::releasePikis()
 
 	for (int i = 0; i < pikis; i++) {
 		Piki* piki = buffer[i];
-		PikiAI::ActFreeArg arg(distList[piki->getKind()], position[piki->getKind()], true);
+		f32 dist;
+		Vector3f pos;
+		if (!piki->mBomb) {
+			dist = distList[piki->getKind()];
+			pos = position[piki->getKind()];
+		} else {
+			dist = distList[BombPikmin];
+			pos = position[BombPikmin];
+		}
+		PikiAI::ActFreeArg arg(dist, pos, true);
 		buffer[i]->mSoundObj->startFreePikiSound(PSSE_PK_VC_BREAKUP, 0x5a, 0);
 		buffer[i]->mBrain->start(PikiAI::ACT_Free, &arg);
 	}

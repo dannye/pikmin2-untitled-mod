@@ -24,6 +24,8 @@
 #define PIKI_RESCUE_RANGE   (140.0f)
 #define GATE_GAS_PIPE_RANGE (128.0f)
 
+#define RBY_BOMB_PIKIS (false)
+
 namespace Game {
 
 u8 Piki::sGraspSituationOptimise = 1;
@@ -260,7 +262,7 @@ int Piki::graspSituation_Fast(Game::Creature** outTarget)
 		case OBJTYPE_Teki: { // can we attack the enemy?
 			EnemyBase* enemy = static_cast<EnemyBase*>(creature);
 			if (
-				getKind() == Yellow &&
+				(getKind() == Yellow || (RBY_BOMB_PIKIS && getKind() <= Yellow)) &&
 				mBomb == nullptr &&
 				enemy->isAlive() &&
 				!enemy->isFlying() &&
@@ -700,7 +702,7 @@ bool Piki::invokeAI(Game::CollEvent* event, bool check)
 		EnemyBase* enemy = static_cast<EnemyBase*>(creature);
 		if (
 			check &&
-			getKind() == Yellow &&
+			(getKind() == Yellow || (RBY_BOMB_PIKIS && getKind() <= Yellow)) &&
 			mBomb == nullptr &&
 			enemy->isAlive() &&
 			!enemy->isLivingThing() &&

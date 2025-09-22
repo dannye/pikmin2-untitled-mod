@@ -204,7 +204,6 @@ bool InteractFue::actPiki(Game::Piki* piki)
 				PikiWalkState* walkState = static_cast<PikiWalkState*>(piki->getCurrState());
 				if (walkState->mPrimed) {
 					if (piki->mBomb) {
-						OSReport("dropping the bomb...\n");
 						piki->mBomb->endCapture();
 						piki->mBomb->mCarrier = nullptr;
 						piki->mBomb = nullptr;
