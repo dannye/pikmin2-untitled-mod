@@ -162,7 +162,7 @@ void PikiWalkState::exec(Piki* piki)
 		mPrimedTimer += sys->mDeltaTime;
 		if (mPrimedTimer >= 5.0f) {
 			mPrimed = false;
-			piki->setDopeEffect(false);
+			if (!piki->doped()) piki->setDopeEffect(false);
 			piki->mSoundObj->startSound(PSSE_PK_VC_DOPE_END, 0);
 		}
 	}
@@ -175,7 +175,7 @@ void PikiWalkState::exec(Piki* piki)
  */
 void PikiWalkState::cleanup(Piki* piki)
 {
-	if (mPrimed) {
+	if (mPrimed && !piki->doped()) {
 		piki->setDopeEffect(false);
 	}
 }

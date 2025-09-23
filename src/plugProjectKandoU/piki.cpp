@@ -1398,7 +1398,11 @@ void Piki::doAnimation()
 
 			mDopeTime = 0;
 
-			mEffectsObj->doKillDoping();
+			bool isPrimed = false;
+			if (getStateID() == PIKISTATE_Walk) {
+				isPrimed = static_cast<PikiWalkState*>(mCurrentState)->mPrimed;
+			}
+			if (!isPrimed) mEffectsObj->doKillDoping();
 		}
 	}
 }

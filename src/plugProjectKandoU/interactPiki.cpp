@@ -209,7 +209,7 @@ bool InteractFue::actPiki(Game::Piki* piki)
 						piki->mBomb = nullptr;
 					}
 					walkState->mPrimed = false;
-					piki->setDopeEffect(false);
+					if (!piki->doped()) piki->setDopeEffect(false);
 				}
 			}
 			if (piki->getCurrAction()) {
