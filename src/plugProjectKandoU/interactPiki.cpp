@@ -201,7 +201,7 @@ bool InteractFue::actPiki(Game::Piki* piki)
 				}
 			}
 			if (piki->getStateID() == PIKISTATE_Walk && mWhistled) {
-				PikiWalkState* walkState = static_cast<PikiWalkState*>(piki->getCurrState());
+				PikiWalkState* walkState = static_cast<PikiWalkState*>(piki->mCurrentState);
 				if (walkState->mPrimed) {
 					if (piki->mBomb) {
 						piki->mBomb->endCapture();

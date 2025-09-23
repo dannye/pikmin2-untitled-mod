@@ -80,7 +80,7 @@ void Obj::onInit(CreatureInitArg* initArg)
 
 	mIsPikiBomb = !isBirthTypeDropGroup();
 	if (initArg) {
-		mIsPikiBomb = ((BombInitArg*)initArg)->mIsPikiBomb;
+		mIsPikiBomb = static_cast<BombInitArg*>(initArg)->mIsPikiBomb;
 	}
 	if (mIsPikiBomb) {
 		setScale(0.4f);

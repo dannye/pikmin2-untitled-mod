@@ -10,7 +10,8 @@ ActPickUp::ActPickUp(Game::Piki* piki) : Action(piki)
 	mName = "PickUp";
 }
 
-void ActPickUp::init(ActionArg* arg) {
+void ActPickUp::init(ActionArg* arg)
+{
 	bool isPickUpArg = false;
 	if (arg) {
 		isPickUpArg = strcmp("ActPickUpArg", arg->getName()) == 0;
@@ -28,7 +29,8 @@ void ActPickUp::init(ActionArg* arg) {
 	mParent->mSoundObj->startSound(PSSE_PK_VC_FIND, 0);
 }
 
-int ActPickUp::exec() {
+int ActPickUp::exec()
+{
 	if (mBomb == nullptr || !mBomb->isAlive() || mBomb->getStateID() != Game::Bomb::BOMB_Wait || (mBomb->mCarrier && mBomb->mCarrier != mParent)) {
 		P2ASSERT(!mParent->mBomb);
 		return ACTEXEC_Fail;

@@ -2781,7 +2781,7 @@ void Navi::doDirectDraw(Graphics& gfx)
 	if (stateID == NSID_Nuku || stateID == NSID_NukuAdjust) {
 		bool display;
 		if (stateID == NSID_Nuku) {
-			Game::NaviNukuState* state = (Game::NaviNukuState*)getCurrState();
+			NaviNukuState* state = static_cast<NaviNukuState*>(mCurrentState);
 			display = state->mDidPressB == 0;
 		} else {
 			display = true;
@@ -2810,10 +2810,10 @@ void Navi::doDirectDraw(Graphics& gfx)
 		if (stateID == NSID_Walk) {
 			piki = mNextThrowPiki;
 		} else if (stateID == NSID_Throw) {
-			Game::NaviThrowState* state = (Game::NaviThrowState*)getCurrState();
+			NaviThrowState* state = static_cast<NaviThrowState*>(mCurrentState);
 			piki = state->mPiki;
 		} else if (stateID == NSID_ThrowWait) {
-			Game::NaviThrowWaitState* state = (Game::NaviThrowWaitState*)getCurrState();
+			NaviThrowWaitState* state = static_cast<NaviThrowWaitState*>(mCurrentState);
 			if (state->mHasHeldPiki)
 				piki = state->mHeldPiki;
 			else
@@ -2866,18 +2866,16 @@ void Navi::doDirectDraw(Graphics& gfx)
 	}
 
 #if GO_HERE_NAVI_DEBUG
-	if (getStateID() != NSID_GoHere) {
-		return;
+	if (getStateID() == NSID_GoHere) {
+		NaviGoHereState* state = static_cast<NaviGoHereState*>(mCurrentState);
+
+		PerspPrintfInfo info;
+		Vector3f pos(mPosition.x, 15.0f + mPosition.y, mPosition.z);
+
+		info.mColorA = Color4(0xC8, 0xC8, 0xFF, 0xC8);
+		info.mColorB = Color4(0x64, 0x64, 0xFF, 0xC8);
+		gfx.perspPrintf(info, pos, "[%d/%d] t[%1.1f]", state->mActiveRouteNodeIndex, state->mPath.mLength, state->mTimeoutTimer);
 	}
-
-	Game::NaviGoHereState* state = (Game::NaviGoHereState*)getCurrState();
-
-	PerspPrintfInfo info;
-	Vector3f pos(mPosition.x, 15.0f + mPosition.y, mPosition.z);
-
-	info.mColorA = Color4(0xC8, 0xC8, 0xFF, 0xC8);
-	info.mColorB = Color4(0x64, 0x64, 0xFF, 0xC8);
-	gfx.perspPrintf(info, pos, "[%d/%d] t[%1.1f]", state->mActiveRouteNodeIndex, state->mPath.mLength, state->mTimeoutTimer);
 #endif
 }
 
