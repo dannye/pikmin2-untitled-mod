@@ -147,7 +147,7 @@ void TMainTitleMgr::startMenuSet(s32, s32 select)
 		Screen::ArgOpenTitleMenu arg(1, id);
 		mTitleMenu.openMenuSet(&arg);
 	} else {
-		Screen::ArgOpenTitleMenu arg(sys->getPlayCommonData()->isChallengeGamePlayable() != 0, id);
+		Screen::ArgOpenTitleMenu arg(1, id);
 		mTitleMenu.openMenuSet(&arg);
 	}
 
@@ -253,7 +253,7 @@ void TMainTitleMgr::update()
 				mTitleMenu.openScreen(&arg);
 				mState = MainMenu;
 			} else {
-				Screen::ArgOpenTitleMenu arg(sys->getPlayCommonData()->isChallengeGamePlayable() != 0, 0);
+				Screen::ArgOpenTitleMenu arg(1, 0);
 				mTitleMenu.openScreen(&arg);
 				mState = MainMenu;
 			}
