@@ -167,11 +167,17 @@ void TTitleMenu::doOpenScreen(ArgOpen* arg)
 				mCategoryPanes[i]->setAlpha(0);
 			}
 		}
+	} else {
+		for (int i = 0; i < 6; i++) {
+			if (i != 2 && i != 3 && i != 4) {
+				mCategoryPanes[i]->hide();
+			}
+		}
 	}
 	if (Game::gGameConfig.mParms.mE3version.mData) {
 		mPad.init(mController, 1, 2, &mSelectID, EUTPadInterface_countNum::MODE_DOWNUP, 0.66f, 0.15f);
 	} else {
-		mPad.init(mController, 0, 5, &mSelectID, EUTPadInterface_countNum::MODE_DOWNUP, 0.66f, 0.15f);
+		mPad.init(mController, 2, 4, &mSelectID, EUTPadInterface_countNum::MODE_DOWNUP, 0.66f, 0.15f);
 	}
 
 	mMainScreen->clearAnmTransform();
