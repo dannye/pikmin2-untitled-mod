@@ -32,7 +32,12 @@ void ActPickUp::init(ActionArg* arg)
 int ActPickUp::exec()
 {
 	if (mBomb == nullptr || !mBomb->isAlive() || mBomb->getStateID() != Game::Bomb::BOMB_Wait || (mBomb->mCarrier && mBomb->mCarrier != mParent)) {
-		P2ASSERT(!mParent->mBomb);
+		if (mParent->mBomb) {
+			P2ASSERT(mParent->mBomb == mBomb && mBomb->mCarrier == mParent);
+			mBomb->endCapture();
+			mBomb->mCarrier = nullptr;
+			mParent->mBomb = nullptr;
+		}
 		return ACTEXEC_Fail;
 	}
 
