@@ -88,12 +88,14 @@ void Obj::onInit(CreatureInitArg* initArg)
 		hardConstraintOn();
 		mHealth    = 2.0f;
 		mMaxHealth = 2.0f;
+		enableEvent(0, EB_BitterImmune);
 	} else {
 		setScale(1.0f);
 		mCollTree->mPart->setScale(1.0f);
 		hardConstraintOff();
 		mHealth    = getParms().mHealth.mValue;
 		mMaxHealth = getParms().mHealth.mValue;
+		disableEvent(0, EB_BitterImmune);
 	}
 
 	mFsm->start(this, BOMB_Wait, nullptr);
