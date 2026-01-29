@@ -5805,6 +5805,12 @@ lbl_constructor:
 /* 8046C0BC 00468FFC  4E 80 00 20 */	blr 
 .endfn __dt__Q23PSM10Scene_DemoFv
 
+.section .text, "ax", unique, 2
+.fn isCave__Q23PSM10Scene_CaveFv, weak
+/* 8046C0C0 00469000  38 60 00 01 */	li r3, 1
+/* 8046C0C4 00469004  4E 80 00 20 */	blr 
+.endfn isCave__Q23PSM10Scene_CaveFv
+
 .fn getPollutUpTimer__Q23PSM10Scene_CaveCFv, weak
 /* 8046C0C8 00469008  80 63 00 64 */	lwz r3, 0x64(r3)
 /* 8046C0CC 0046900C  4E 80 00 20 */	blr 
