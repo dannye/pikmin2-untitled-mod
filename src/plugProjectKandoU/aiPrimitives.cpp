@@ -4134,7 +4134,7 @@ void ActStickAttack::createEfx()
 			f32 fxChance         = (100 - mabiki->mCounter) / 100.0f;
 			if (randFloat() <= fxChance) {
 				if (static_cast<Game::ItemGate*>(mCreature)->isStone()) {
-					efx::createSimpleGlow2(pos);
+					efx::createSimpleInattack(pos);
 					mParent->startSound(mCreature, PSSE_PK_SE_KARABURI, PSGame::SeMgr::SETSE_PikiWorking);
 					mabiki->mBuffer++;
 				} else {
@@ -4156,7 +4156,7 @@ void ActStickAttack::createEfx()
 			f32 fxChance         = (100 - mabiki->mCounter) / 100.0f;
 			if (randFloat() <= fxChance) {
 				if (static_cast<Game::ItemGate*>(mCreature)->isStone()) {
-					efx::createSimpleGlow2(pos);
+					efx::createSimpleInattack(pos);
 					mParent->startSound(mCreature, PSSE_PK_SE_KARABURI, PSGame::SeMgr::SETSE_PikiWorking);
 					mabiki->mBuffer++;
 				} else {
