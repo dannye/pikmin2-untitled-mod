@@ -248,31 +248,22 @@ void StateMove::exec(EnemyBase* enemy)
 
 	if (target) {
 		uji->mTargetCreature = target;
-		f32 angleDist        = uji->changeFaceDir(target);
-		uji->setTargetVelocity();
+		f32 angleDist        = uji->turnToTarget(target, CG_GENERALPARMS(uji).mTurnSpeed(), CG_GENERALPARMS(uji).mMaxTurnAngle());
+		uji->setTargetSpeed(CG_GENERALPARMS(uji).mMoveSpeed());
 
-		bool finish = false;
-		if (uji->isTargetWithinRange(target, angleDist, CG_GENERALPARMS(uji).mMaxAttackAngle(), CG_GENERALPARMS(uji).mMaxAttackRange(),
-		                             angleDist, angleDist)) {
-			finish = true;
-		}
-
-		if (finish) {
+		if (uji->isTargetAttackable(target, angleDist, CG_GENERALPARMS(uji).mMaxAttackRange(), CG_GENERALPARMS(uji).mMaxAttackAngle())) {
 			uji->mNextState = UJIB_Attack2;
 			uji->finishMotion();
 		} else {
-			Vector3f diff = uji->mHomePosition;
-			diff -= uji->getPosition();
-			f32 len = diff.length();
-			if (len > CG_GENERALPARMS(uji).mTerritoryRadius()) {
+
+			if (uji->distanceFromHome() > CG_GENERALPARMS(uji).mTerritoryRadius()) {
 				uji->mNextState = UJIB_GoHome;
 				uji->finishMotion();
+			} else if (EnemyFunc::getNearestPikminOrNavi(uji, CG_GENERALPARMS(uji).mMaxAttackAngle(),
+			                                             CG_GENERALPARMS(uji).mMaxAttackRange(), nullptr, nullptr, nullptr)) {
+				uji->mNextState = UJIB_Attack2;
+				uji->finishMotion();
 			}
-		}
-		if (EnemyFunc::getNearestPikminOrNavi(uji, CG_GENERALPARMS(uji).mMaxAttackAngle(), CG_GENERALPARMS(uji).mMaxAttackRange(), nullptr,
-		                                      nullptr, nullptr)) {
-			uji->mNextState = UJIB_Attack2;
-			uji->finishMotion();
 		}
 	} else {
 		if (uji->isBreakBridge()) {
@@ -286,7 +277,7 @@ void StateMove::exec(EnemyBase* enemy)
 
 	uji->setInWaterDamage();
 
-	if (uji->mHealth <= 0.0f) {
+	if (uji->isDead()) {
 		transit(uji, UJIB_Dead, nullptr);
 		return;
 	}

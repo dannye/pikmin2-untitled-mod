@@ -93,9 +93,7 @@ void TagToName(u64, char*);
 void setBlendPane(J2DBlendInfo, J2DScreen*, u64*);
 
 #define NUM_PIKI_ICONS (22)
-
 extern const char* PikiIconTextureName[NUM_PIKI_ICONS];
-
 extern ResTIMG* PikiIconTextureResTIMG[NUM_PIKI_ICONS];
 
 } // namespace Screen
