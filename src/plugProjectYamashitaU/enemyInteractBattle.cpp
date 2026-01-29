@@ -1,6 +1,7 @@
 #include "Game/EnemyBase.h"
 #include "Game/Interaction.h"
 #include "Game/Navi.h"
+#include "Game/Entities/ItemGate.h"
 
 namespace Game {
 
@@ -104,5 +105,13 @@ bool InteractBomb::actEnemy(EnemyBase* enemy)
 		callback = enemy->bombCallBack(mCreature, mDirection, mDamage);
 	}
 	return callback;
+}
+
+bool InteractBomb::actItem(BaseItem* item)
+{
+	if (item->mObjectTypeID == OBJTYPE_Gate) {
+		return static_cast<Game::ItemGate*>(item)->bombCallBack(mDamage);
+	}
+	return false;
 }
 } // namespace Game

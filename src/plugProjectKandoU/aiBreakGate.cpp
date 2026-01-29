@@ -78,7 +78,7 @@ void ActBreakGate::initStickAttack()
 	u8 type = STICKATK_WhiteGate;
 	if (mGate->mColor == GATECOLOR_Black) {
 		type = STICKATK_BlackGate;
-	} else if (mGate->mIsElectric) {
+	} else if (mGate->isElectric()) {
 		type = STICKATK_ElecGate;
 	}
 

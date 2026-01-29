@@ -6,6 +6,7 @@
 #include "Game/Entities/ItemBridge.h"
 #include "Game/Entities/ItemCave.h"
 #include "Game/Entities/ItemDengekiGate.h"
+#include "Game/Entities/ItemStoneGate.h"
 #include "Game/Entities/ItemDownFloor.h"
 #include "Game/Entities/ItemGate.h"
 #include "Game/Entities/ItemHole.h"

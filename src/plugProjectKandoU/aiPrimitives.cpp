@@ -7,6 +7,7 @@
 #include "Vector3.h"
 #include "PikiAI.h"
 #include "Game/pelletMgr.h"
+#include "Game/Entities/ItemGate.h"
 #include "Game/Entities/ItemOnyon.h"
 #include "Game/pathfinder.h"
 #include "Game/routeMgr.h"
@@ -4132,9 +4133,15 @@ void ActStickAttack::createEfx()
 			Game::Mabiki* mabiki = mCreature->getMabiki();
 			f32 fxChance         = (100 - mabiki->mCounter) / 100.0f;
 			if (randFloat() <= fxChance) {
-				efx::createSimpleGate2Attack(pos);
-				mParent->startSound(mCreature, PSSE_PK_SE_HIT_HARDWALL, PSGame::SeMgr::SETSE_PikiWorking);
-				mabiki->mBuffer++;
+				if (static_cast<Game::ItemGate*>(mCreature)->isStone()) {
+					efx::createSimpleGlow2(pos);
+					mParent->startSound(mCreature, PSSE_PK_SE_KARABURI, PSGame::SeMgr::SETSE_PikiWorking);
+					mabiki->mBuffer++;
+				} else {
+					efx::createSimpleGate2Attack(pos);
+					mParent->startSound(mCreature, PSSE_PK_SE_HIT_HARDWALL, PSGame::SeMgr::SETSE_PikiWorking);
+					mabiki->mBuffer++;
+				}
 			}
 		} else {
 			efx::createSimpleGate2Attack(pos);
@@ -4148,9 +4155,15 @@ void ActStickAttack::createEfx()
 			Game::Mabiki* mabiki = mCreature->getMabiki();
 			f32 fxChance         = (100 - mabiki->mCounter) / 100.0f;
 			if (randFloat() <= fxChance) {
-				efx::createSimpleGate1Attack(pos);
-				mParent->startSound(mCreature, PSSE_PK_SE_HIT_SOFTWALL, PSGame::SeMgr::SETSE_PikiWorking);
-				mabiki->mBuffer++;
+				if (static_cast<Game::ItemGate*>(mCreature)->isStone()) {
+					efx::createSimpleGlow2(pos);
+					mParent->startSound(mCreature, PSSE_PK_SE_KARABURI, PSGame::SeMgr::SETSE_PikiWorking);
+					mabiki->mBuffer++;
+				} else {
+					efx::createSimpleGate1Attack(pos);
+					mParent->startSound(mCreature, PSSE_PK_SE_HIT_SOFTWALL, PSGame::SeMgr::SETSE_PikiWorking);
+					mabiki->mBuffer++;
+				}
 			}
 		} else {
 			efx::createSimpleGate1Attack(pos);

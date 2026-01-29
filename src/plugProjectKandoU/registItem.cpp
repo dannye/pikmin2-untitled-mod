@@ -125,6 +125,11 @@ void ItemMgr::createManagers(u32 flags)
 		ItemDengekiGate::mgr = nullptr;
 	}
 	sys->heapStatusEnd("-DengekiGate-");
+
+	sys->heapStatusStart("-StoneGate-", nullptr);
+	ItemStoneGate::mgr = new ItemStoneGate::Mgr;
+	itemMgr->addMgr(ItemStoneGate::mgr);
+	sys->heapStatusEnd("-StoneGate-");
 }
 
 /**
@@ -149,6 +154,7 @@ void ItemMgr::clearGlobalPointers()
 	ItemBridge::mgr      = nullptr;
 	itemGateMgr          = nullptr;
 	ItemDengekiGate::mgr = nullptr;
+	ItemStoneGate::mgr   = nullptr;
 }
 
 /**

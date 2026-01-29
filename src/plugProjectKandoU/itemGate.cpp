@@ -1,5 +1,6 @@
 #include "Game/Entities/ItemGate.h"
 #include "Game/Entities/ItemDengekiGate.h"
+#include "Game/Entities/ItemStoneGate.h"
 #include "efx/TGate.h"
 #include "efx/TEgate.h"
 #include "PSM/WorkItem.h"
@@ -20,6 +21,7 @@ static const char unusedItemGateName[] = "itemGate";
 
 ItemGateMgr* itemGateMgr;
 ItemDengekiGate::Mgr* ItemDengekiGate::mgr;
+ItemStoneGate::Mgr* ItemStoneGate::mgr;
 
 /**
  * @note Address: 0x801C7604
@@ -47,7 +49,7 @@ ItemGate::ItemGate()
 	mSegmentsDown           = 0;
 	mMaxSegments            = 3;
 	mMaxSegmentHealth       = 100.0f;
-	mIsElectric             = false;
+	mGateType               = GATETYPE_Bramble;
 	mEgateEfxA              = nullptr;
 	mEgateEfxBC             = nullptr;
 }
@@ -67,8 +69,10 @@ void ItemGate::constructor()
  */
 void ItemGate::onInit(CreatureInitArg* arg)
 {
-	if (mIsElectric) {
+	if (isElectric()) {
 		ItemDengekiGate::mgr->setupGate(this);
+	} else if (isStone()) {
+		ItemStoneGate::mgr->setupGate(this);
 	} else {
 		itemGateMgr->setupGate(this);
 	}
@@ -84,11 +88,14 @@ void ItemGate::onInit(CreatureInitArg* arg)
 		mFaceDir = randFloat() * TAU;
 	}
 
-	if (mIsElectric) {
+	if (isElectric()) {
 		mMatAnimator = new Sys::MatLoopAnimator;
 		mMatAnimator->start(&ItemDengekiGate::mgr->mMatAnimation);
 		mEgateEfxA  = new efx::TEgateA;
 		mEgateEfxBC = new efx::TEgateBC;
+	} else if (isStone()) {
+		mMatAnimator = new Sys::MatLoopAnimator;
+		mMatAnimator->start(&ItemStoneGate::mgr->mMatTevRegAnim);
 	} else {
 		mMatAnimator = new Sys::MatLoopAnimator;
 		mMatAnimator->start(&itemGateMgr->mMatTevRegAnim);
@@ -105,8 +112,10 @@ void ItemGate::onSetPosition()
 	mBaseTrMatrix.makeTR(mPosition, rotation);
 	PSMTXCopy((PSQuaternion*)&mBaseTrMatrix, mModel->mJ3dModel->mPosMtx);
 	mModel->mJ3dModel->calc();
-	if (mIsElectric) {
+	if (isElectric()) {
 		ItemDengekiGate::mgr->setupPlatform(this);
+	} else if (isStone()) {
+		ItemStoneGate::mgr->setupPlatform(this);
 	} else {
 		itemGateMgr->setupPlatform(this);
 	}
@@ -145,7 +154,7 @@ void ItemGate::doLoad(Stream& stream)
 	if (mSegmentsDown >= mMaxSegments) {
 		mCentrePlatInstance->setCollision(false);
 		setAlive(false);
-		if (mIsElectric) {
+		if (isElectric()) {
 			mEgateEfxA->forceKill();
 			mEgateEfxBC->forceKill();
 		}
@@ -203,7 +212,7 @@ void ItemGate::doAI()
 		static_cast<PSM::WorkItem*>(mSoundObj)->eventStop();
 	}
 
-	if (mIsElectric && isAlive()) {
+	if (isElectric() && isAlive()) {
 		mSoundObj->startSound(PSSE_EV_ELEC_GATE, 0);
 	}
 }
@@ -219,13 +228,31 @@ void ItemGate::onKeyEvent(const SysShape::KeyEvent& keyEvent)
 	}
 }
 
+bool ItemGate::bombCallBack(f32 damage)
+{
+	if (mCurrentState && !isElectric()) {
+		mCurrentState->onDamage(this, damage * 30.0f);
+		switch (mSoundEvent.event()) {
+		case TSE_Active:
+			P2ASSERTLINE(380, mSoundObj->getCastType() == PSM::CCT_WorkItem);
+			static_cast<PSM::WorkItem*>(mSoundObj)->eventStart();
+			break;
+		case TSE_Apply:
+			P2ASSERTLINE(386, mSoundObj->getCastType() == PSM::CCT_WorkItem);
+			static_cast<PSM::WorkItem*>(mSoundObj)->eventRestart();
+			break;
+		}
+	}
+	return true;
+}
+
 /**
  * @note Address: 0x801C7F24
  * @note Size: 0x11C
  */
 bool ItemGate::interactAttack(Game::InteractAttack& attack)
 {
-	if (mCurrentState) {
+	if (mCurrentState && !isStone()) {
 		mCurrentState->onDamage(this, attack.mDamage);
 		switch (mSoundEvent.event()) {
 		case TSE_Active:
@@ -652,11 +679,11 @@ lbl_801C8578:
  */
 void ItemGate::changeMaterial()
 {
-	int jointIdx = (mIsElectric) ? 0 : mModel->getJoint("move")->mJointIndex;
+	int jointIdx = (isElectric() || isStone()) ? 0 : mModel->getJoint("move")->mJointIndex;
 
 	bool showJoint = mCentrePlatInstance->isFlag(PLATFLAG_CollisionActive) && mLod.isFlag(AILOD_IsVisible);
 	mModel->jointVisible(showJoint, (u16)jointIdx);
-	if (mIsElectric) {
+	if (isElectric()) {
 		mMatAnimator->animate(30.0f);
 	} else {
 		mMatAnimator->setCurrentFrame(mColor);
@@ -1022,6 +1049,9 @@ void GateDownState::onDamage(Game::ItemGate* gate, f32 damage)
  */
 void GateDownState::onKeyEvent(Game::ItemGate* gate, const SysShape::KeyEvent& keyEvent)
 {
+	if (gate->mCurrentSegmentHealth < 0.0f) {
+		gate->mDamage += -gate->mCurrentSegmentHealth;
+	}
 	gate->mSegmentsDown++;
 	gate->mCurrentSegmentHealth = gate->mMaxSegmentHealth;
 	if (gate->mSegmentsDown == gate->mMaxSegments) {
@@ -1029,7 +1059,7 @@ void GateDownState::onKeyEvent(Game::ItemGate* gate, const SysShape::KeyEvent& k
 		platMgr->delInstance(gate->mCentrePlatInstance);
 		gate->setAlive(false);
 		gate->mWayPoint->setOpen(true);
-		if (gate->mIsElectric) {
+		if (gate->isElectric()) {
 			gate->mEgateEfxA->fade();
 			gate->mEgateEfxBC->fade();
 		}
@@ -1076,7 +1106,7 @@ ItemDengekiGate::Mgr::Mgr()
 
 void ItemDengekiGate::Mgr::setupGate(Game::ItemGate* gate)
 {
-	gate->mIsElectric = true;
+	gate->mGateType = GATETYPE_Electric;
 	sys->heapStatusStart("new Model", nullptr);
 	gate->mModel = new SysShape::Model(mModelData[0], 0, 2);
 	sys->heapStatusEnd("new Model");
@@ -1157,7 +1187,7 @@ BaseItem* ItemDengekiGate::Mgr::generatorBirth(Vector3f& pos, Vector3f& rot, Gam
 	ItemGate* gate              = static_cast<ItemGate*>(birth());
 	gate->mMaxSegmentHealth     = gateParam->mLife;
 	gate->mCurrentSegmentHealth = gate->mMaxSegmentHealth;
-	gate->mIsElectric           = true;
+	gate->mGateType             = GATETYPE_Electric;
 	gate->init(nullptr);
 	gate->mFaceDir = roundAng(rot.y);
 	gate->setPosition(pos, false);
@@ -1183,6 +1213,144 @@ char* ItemDengekiGate::Mgr::getCaveName(int outsideCave)
 int ItemDengekiGate::Mgr::getCaveID(char* cave)
 {
 	return -(strncmp("e-gate", cave, strlen("e-gate")) != 0);
+}
+
+ItemStoneGate::Mgr::Mgr()
+    : BaseItemMgr(1)
+{
+	mItemName = "StoneGate";
+	sys->heapStatusStart("ItemStoneGate", nullptr);
+	mObjectPathComponent = "user/Kando/objects/gates";
+	setModelSize(1);
+	loadArchive("s-gate-arc.szs");
+	loadBmd("e-gate.bmd", 0, J3DMODEL_Unk30);
+	JKRArchive* arc = openTextArc("s-gate-texts.szs");
+	loadAnimMgr(arc, "e-animmgr.txt");
+	loadCollision(arc, "gatecoll.txt");
+	mCentrePlatform = loadPlatform(arc, "e-cent.pla");
+	mSidePlatform   = loadPlatform(arc, "e-side.pla");
+	closeTextArc(arc);
+	JKRMountArchive("user/Kando/gates/s-gate-arc.szs", JKRArchive::EMM_Mem, nullptr, JKRArchive::EMD_Head);
+	SysShape::Model::enableMaterialAnim(mModelData[0], 0);
+	void* brk = JKRFileLoader::getGlbResource("e-gate.brk", nullptr);
+	mMatTevRegAnim.attachResource(brk, mModelData[0]);
+	sys->heapStatusEnd("ItemStoneGate");
+}
+
+void ItemStoneGate::Mgr::initDependency()
+{
+	Iterator<ItemGate> iGate = &mNodeObjectMgr;
+	CI_LOOP(iGate)
+	{
+		ItemGate* gate = *iGate;
+		gate->initDependency();
+	}
+}
+
+BaseItem* ItemStoneGate::Mgr::generatorBirth(Vector3f& pos, Vector3f& rot, Game::GenItemParm* param)
+{
+	P2ASSERT(param);
+	GenGateParm* gateParam      = static_cast<GenGateParm*>(param);
+	ItemGate* gate              = static_cast<ItemGate*>(birth());
+	gate->mMaxSegmentHealth     = gateParam->mLife;
+	gate->mCurrentSegmentHealth = gate->mMaxSegmentHealth;
+	gate->mColor                = gateParam->mColor;
+	gate->mGateType             = GATETYPE_Stone;
+	gate->init(nullptr);
+	gate->mFaceDir = roundAng(rot.y);
+	gate->setPosition(pos, false);
+	return gate;
+}
+
+void ItemStoneGate::Mgr::generatorWrite(Stream& stream, Game::GenItemParm* param)
+{
+	P2ASSERT(param);
+	GenGateParm* gateParam = static_cast<GenGateParm*>(param);
+	stream.textWriteTab(stream.mTabCount);
+	stream.writeFloat(gateParam->mLife);
+	stream.textWriteText("\t#ライフ\r\n"); // life
+	stream.textWriteTab(stream.mTabCount);
+	stream.writeByte(gateParam->mColor);
+	stream.textWriteText("\t#Color\r\n");
+}
+
+void ItemStoneGate::Mgr::generatorRead(Stream& stream, Game::GenItemParm* param, u32 version)
+{
+	P2ASSERT(param);
+	GenGateParm* gateParam = static_cast<GenGateParm*>(param);
+	if (version >= '0001') {
+		gateParam->mLife = stream.readFloat();
+	}
+	if (version >= '0002') {
+		gateParam->mColor = stream.readByte();
+	} else {
+		gateParam->mColor = 0;
+	}
+}
+
+GenItemParm* ItemStoneGate::Mgr::generatorNewItemParm()
+{
+	return new GenGateParm();
+}
+
+char* ItemStoneGate::Mgr::getCaveName(int outsideCave)
+{
+	if (outsideCave == 0) {
+		return "s-gate";
+	}
+	return nullptr;
+}
+
+int ItemStoneGate::Mgr::getCaveID(char* cave)
+{
+	return -(strncmp("s-gate", cave, strlen("s-gate")) != 0);
+}
+
+void ItemStoneGate::Mgr::setupGate(Game::ItemGate* gate)
+{
+	gate->mGateType = GATETYPE_Stone;
+	sys->heapStatusStart("new Model", nullptr);
+	gate->mModel = new SysShape::Model(mModelData[0], 0, 2);
+	sys->heapStatusEnd("new Model");
+	gate->mAnimator.mAnimMgr = mAnimMgr;
+	gate->mAnimator.startAnim(0, nullptr);
+}
+
+void ItemStoneGate::Mgr::setupPlatform(Game::ItemGate* gate)
+{
+	sys->heapStatusStart("Platform", nullptr);
+	Matrixf* moveJointMatrix = gate->mModel->getJoint("gate")->getWorldMatrix();
+	ID32 centreID            = 'gate';
+	PlatAddInstanceArg platArgCentre;
+	platArgCentre.mItem       = gate;
+	platArgCentre.mId         = centreID;
+	platArgCentre.mPlatform   = mCentrePlatform;
+	platArgCentre.mMatrix     = moveJointMatrix;
+	gate->mCentrePlatInstance = platMgr->addInstance(platArgCentre);
+	sys->heapStatusStart("Clone-Plat", nullptr);
+	Matrixf* fixJointMatrix = gate->mModel->getJoint("pole")->getWorldMatrix();
+	ID32 sideID             = 'side';
+	PlatAddInstanceArg platArgSide;
+	platArgSide.mItem             = gate;
+	platArgSide.mId               = sideID;
+	platArgSide.mPlatform         = mSidePlatform;
+	platArgSide.mMatrix           = fixJointMatrix;
+	platArgSide.mEnableGlobalPlat = true;
+	gate->mSidePlatInstance       = platMgr->addInstance(platArgSide);
+	sys->heapStatusEnd("Clone-Plat");
+	sys->heapStatusEnd("Platform");
+}
+
+BaseItem* ItemStoneGate::Mgr::birth()
+{
+	sys->heapStatusStart("ItemStoneGate", nullptr);
+	ItemGate* item                 = new ItemGate;
+	TObjectNode<ItemGate>* objNode = new TObjectNode<ItemGate>;
+	objNode->mContents             = item;
+	mNodeObjectMgr.mNode.add(objNode);
+	objNode->mContents->constructor();
+	sys->heapStatusEnd("ItemStoneGate");
+	return item;
 }
 
 } // namespace Game

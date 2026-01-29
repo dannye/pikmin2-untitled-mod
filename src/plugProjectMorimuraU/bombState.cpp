@@ -157,7 +157,7 @@ void StateBomb::exec(EnemyBase* enemy)
 					Sys::Sphere sphere;
 					creature->getBoundingSphere(sphere);
 					if (!(sphere.mPosition.y - sphere.mRadius > max) && !(sphere.mPosition.y + sphere.mRadius < min)) {
-						if (creature->isTeki()) {
+						if (creature->isTeki() || creature->mObjectTypeID == OBJTYPE_Gate) {
 
 							f32 weight = 1.0f;
 							f32 force  = weight * CG_PROPERPARMS(enemy).mDamageToEnemies.mValue;

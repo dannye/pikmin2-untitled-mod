@@ -585,6 +585,7 @@ struct InteractBomb : public InteractWind {
 	virtual bool actPiki(Piki*);       // _0C
 	virtual bool actNavi(Navi*);       // _10
 	virtual bool actEnemy(EnemyBase*); // _14
+	virtual bool actItem(BaseItem*);
 
 	// _00     = VTBL
 	// _00-_18 = InteractWind

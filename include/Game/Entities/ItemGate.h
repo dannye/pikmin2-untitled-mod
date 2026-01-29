@@ -22,6 +22,12 @@ enum GateColor {
 	GATECOLOR_Black = 1,
 };
 
+enum GateType {
+	GATETYPE_Bramble  = 0,
+	GATETYPE_Electric = 1,
+	GATETYPE_Stone    = 2,
+};
+
 namespace Game {
 struct ItemGate;
 
@@ -129,6 +135,12 @@ struct ItemGate : public WorkItem<ItemGate, GateFSM, GateState> {
 	virtual void onSetPosition();                             // _21C
 	virtual void onKeyEvent(const SysShape::KeyEvent& event); // _220 (weak)
 
+	bool bombCallBack(f32 damage);
+
+	bool isBramble()  { return mGateType == GATETYPE_Bramble; }
+	bool isElectric() { return mGateType == GATETYPE_Electric; }
+	bool isStone()    { return mGateType == GATETYPE_Stone; }
+
 	void initMotion();
 	void initPlanes();
 
@@ -150,7 +162,7 @@ struct ItemGate : public WorkItem<ItemGate, GateFSM, GateState> {
 	int mSegmentsDown;                  // _20C, enum?
 	int mMaxSegments;                   // _210
 	f32 mFaceDir;                       // _214
-	bool mIsElectric;                   // _218
+	u8 mGateType;                       // _218
 	efx::TEgateA* mEgateEfxA;           // _21C
 	efx::TEgateBC* mEgateEfxBC;         // _220
 	Plane mPlanes[4];                   // _224
