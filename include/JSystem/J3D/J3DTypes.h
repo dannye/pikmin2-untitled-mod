@@ -289,11 +289,11 @@ struct J3DAlphaComp {
 		mRef1       = info.mRef1;
 	}
 
-	void load() { J3DGDSetAlphaCompare(getComp0(), getRef0(), getOp(), getComp1(), getRef1()); }
+	void load() const { J3DGDSetAlphaCompare((GXCompare)getComp0(), mRef0, (GXAlphaOp)getOp(), (GXCompare)getComp1(), mRef1); }
 
-	GXCompare getComp0() const { return GXCompare(j3dAlphaCmpTable[mAlphaCmpID * 3]); }
-	GXAlphaOp getOp() const { return GXAlphaOp(j3dAlphaCmpTable[mAlphaCmpID * 3 + 1]); }
-	GXCompare getComp1() const { return GXCompare(j3dAlphaCmpTable[mAlphaCmpID * 3 + 2]); }
+	u8 getComp0() const { return *(&j3dAlphaCmpTable[mAlphaCmpID * 3]); }
+	u8 getOp() const { return *(&j3dAlphaCmpTable[mAlphaCmpID * 3 + 1]); }
+	u8 getComp1() const { return *(&j3dAlphaCmpTable[mAlphaCmpID * 3 + 2]); }
 	u8 getRef0() const { return mRef0; }
 	u8 getRef1() const { return mRef1; }
 
@@ -413,10 +413,9 @@ inline u16 calcColorChanID(u16 enable, u8 matSrc, u8 lightMask, u8 diffuseFn, u8
 	return reg;
 }
 
-inline u32 setChanCtrlMacro(u8 enable, GXColorSrc ambSrc, GXColorSrc matSrc, u32 lightMask, GXDiffuseFn diffuseFn, GXAttnFn attnFn)
+static inline u32 setChanCtrlMacro(u8 enable, GXColorSrc ambSrc, GXColorSrc matSrc, u32 lightMask, GXDiffuseFn diffuseFn, GXAttnFn attnFn)
 {
-	u32 ret = matSrc << 0; // Putting this as a separate statement fixes codegen, but regalloc is still wrong
-	return ret | enable << 1 | (lightMask & 0x0F) << 2 | ambSrc << 6 | ((attnFn == GX_AF_SPEC) ? GX_DF_NONE : diffuseFn) << 7
+	return matSrc << 0 | enable << 1 | (lightMask & 0x0F) << 2 | ambSrc << 6 | ((attnFn == GX_AF_SPEC) ? GX_DF_NONE : diffuseFn) << 7
 	     | (attnFn != GX_AF_NONE) << 9 | (attnFn != GX_AF_SPEC) << 10 | (lightMask >> 4 & 0x0F) << 11;
 }
 
@@ -446,21 +445,21 @@ struct J3DColorChan {
 		                            info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc);
 	}
 
-	GXAttnFn getAttnFn();
-	GXDiffuseFn getDiffuseFn() { return GXDiffuseFn(mChanCtrl >> 7 & 3); }
-	u8 getLightMask() { return ((mChanCtrl >> 2 & 0x0f) | (mChanCtrl >> 11 & 0x0f) << 4); }
+	u8 getAttnFn() const;
+	u8 getDiffuseFn() const { return (u32)(mChanCtrl & (3 << 7)) >> 7; }
+	u8 getLightMask() const { return ((mChanCtrl >> 2) & 0x0F) | ((mChanCtrl >> 11) & 0x0F) << 4; }
 	void setLightMask(u8 mask)
 	{
 		mChanCtrl = (mChanCtrl & ~0x003c) | ((mask & 0x0F) << 2);
 		mChanCtrl = (mChanCtrl & ~0x7800) | ((mask & 0xF0) << 7);
 	}
-	GXColorSrc getMatSrc() { return GXColorSrc(mChanCtrl >> 0 & 0x01); }
-	GXColorSrc getAmbSrc() { return GXColorSrc(mChanCtrl >> 6 & 0x01); }
-	u8 getEnable() { return !!(mChanCtrl & 0x02); }
-	void load()
+	u8 getMatSrc() const { return mChanCtrl & 1; }
+	u8 getAmbSrc() const { return (u32)(mChanCtrl & (1 << 6)) >> 6; }
+	u8 getEnable() const { return (u32)(mChanCtrl & 2) >> 1; }
+	void load() const
 	{
-		// something in here is not quite right still
-		J3DGDWrite_u32(setChanCtrlMacro(getEnable(), getAmbSrc(), getMatSrc(), getLightMask(), getDiffuseFn(), getAttnFn()));
+		J3DGDWrite_u32(setChanCtrlMacro(getEnable(), (GXColorSrc)getAmbSrc(), (GXColorSrc)getMatSrc(), getLightMask(),
+		                                (GXDiffuseFn)getDiffuseFn(), (GXAttnFn)getAttnFn()));
 	}
 
 	u16 mChanCtrl; // _00
@@ -772,7 +771,7 @@ struct J3DTexCoord : public J3DTexCoordInfo {
 
 	u8 getTexGenType() { return mTexGenType; }
 	u8 getTexGenSrc() { return mTexGenSrc; }
-	u8 getTexGenMtx() { return mTexGenMtx & 0xFF; }
+	u8 getTexGenMtx() { return mTexGenMtx; }
 	u16 getTexMtxReg() { return mTexMtxReg & 0xFF; }
 
 	void resetTexMtxReg() { mTexMtxReg = mTexGenMtx; }

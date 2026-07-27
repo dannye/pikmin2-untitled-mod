@@ -237,11 +237,11 @@ u16 WaypointPathfinder::findPath(s16 startIdx, s16 destIdx, u32 allowedFlags, Pa
 				continue; // Skip unfinished bridges in water
 			}
 
-			if ((allowedFlags & Game::PATHFLAG_DisallowVsRed) && (neighborWP->mFlags & Game::WPF_VersusRed)) {
+			if ((allowedFlags & Game::PATHFLAG_VsRed) && (neighborWP->mFlags & Game::WPF_VersusRed)) {
 				continue; // Skip red versus waypoints when disallowed
 			}
 
-			if ((allowedFlags & Game::PATHFLAG_DisallowVsBlue) && (neighborWP->mFlags & Game::WPF_VersusBlue)) {
+			if ((allowedFlags & Game::PATHFLAG_VsBlue) && (neighborWP->mFlags & Game::WPF_VersusBlue)) {
 				continue; // Skip blue versus waypoints when disallowed
 			}
 

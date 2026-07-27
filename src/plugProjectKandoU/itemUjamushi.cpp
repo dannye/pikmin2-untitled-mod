@@ -2425,7 +2425,7 @@ Mgr::Mgr()
 	setModelSize(2);
 	loadArchive("arc.szs");
 	loadBmd("ujamushi_poly.bmd", 0, J3DMODEL_CreateNewDL);
-	loadBmd("ujamushi_bill.bmd", 1, J3DMODEL_Unk26 | J3DMODEL_CreateNewDL);
+	loadBmd("ujamushi_bill.bmd", 1, J3DMODEL_Unk30 | J3DMODEL_CreateNewDL);
 	_308                   = 0;
 	_304                   = 0;
 	_30C                   = 0.0f;
@@ -2439,7 +2439,7 @@ Mgr::Mgr()
 	billData->simpleCalcMaterial(0, *(Mtx*)&j3dDefaultMtx);
 	billData->makeSharedDL();
 
-	_88 = 72.0f;
+	_88 = 0.35f;
 	_8C = 1;
 	_8D = 1;
 	_8E = 1;

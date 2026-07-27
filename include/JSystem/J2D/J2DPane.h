@@ -126,7 +126,7 @@ struct J2DScrnBlockPictureParameter {
 	u8 _06[2];                           // _06 - padding?
 	u16 _08[4];                          // _08
 	JGeometry::TVec2<s16> mTexCoords[4]; // _10
-	GXColor mCornerColor[4];             // _20
+	u32 mCornerColor[4];                 // _20 (using u32 instead of GXColor fixes some functions)
 };
 
 struct J2DScreenInfoBlock : public J2DScrnBlockHeader {
@@ -278,12 +278,6 @@ struct J2DPane {
 		calcMtx();
 	}
 
-	inline void multScale(f32 scale)
-	{
-		mScale *= scale;
-		calcMtx();
-	}
-
 	inline void setAlphaFromFloat(f32 alpha)
 	{
 		if (alpha >= 0.0f) {
@@ -331,6 +325,7 @@ struct J2DPane {
 		calcMtx();
 	}
 
+	inline f32 getOffsetX() { return mOffset.x; }
 	inline f32 getOffsetY() { return mOffset.y; }
 
 	inline void setAngleY(f32 a)

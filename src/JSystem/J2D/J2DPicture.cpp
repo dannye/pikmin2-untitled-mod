@@ -524,7 +524,7 @@ int J2DPicture::remove(JUTTexture* texture)
  * @note Address: 0x8003B768
  * @note Size: 0xE8
  */
-ResTIMG* J2DPicture::changeTexture(const ResTIMG* img, u8 id)
+const ResTIMG* J2DPicture::changeTexture(const ResTIMG* img, u8 id)
 {
 	if (id > mTextureCount || 4 <= id || img == nullptr) {
 		return nullptr;
@@ -549,7 +549,7 @@ ResTIMG* J2DPicture::changeTexture(const ResTIMG* img, u8 id)
  * @note Size: 0x58
  * changeTexture__10J2DPictureFPCcUc
  */
-ResTIMG* J2DPicture::changeTexture(const char* fileName, u8 id)
+const ResTIMG* J2DPicture::changeTexture(const char* fileName, u8 id)
 {
 	return changeTexture((ResTIMG*)J2DScreen::getNameResource(fileName), id);
 }
@@ -558,7 +558,7 @@ ResTIMG* J2DPicture::changeTexture(const char* fileName, u8 id)
  * @note Address: 0x8003B8CC
  * @note Size: 0x108
  */
-ResTIMG* J2DPicture::changeTexture(const ResTIMG* timg, u8 id, JUTPalette* palette)
+const ResTIMG* J2DPicture::changeTexture(const ResTIMG* timg, u8 id, JUTPalette* palette)
 {
 	if (id > mTextureCount || 4 <= id || timg == nullptr) {
 		return nullptr;
@@ -586,7 +586,7 @@ ResTIMG* J2DPicture::changeTexture(const ResTIMG* timg, u8 id, JUTPalette* palet
  * @note Size: 0x68
  * changeTexture__10J2DPictureFPCcUcP10JUTPalette
  */
-ResTIMG* J2DPicture::changeTexture(const char* fileName, u8 id, JUTPalette* palette)
+const ResTIMG* J2DPicture::changeTexture(const char* fileName, u8 id, JUTPalette* palette)
 {
 	return changeTexture((ResTIMG*)J2DScreen::getNameResource(fileName), id, palette);
 }
@@ -877,7 +877,7 @@ void J2DPicture::setTevMode()
 		GXSetTevOrder(GXTevStageID(i), GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
 		GXSetTevColor(GX_TEVREG0, mBlack);
 		GXSetTevColor(GX_TEVREG1, mWhite);
-		GXSetTevColorIn(GXTevStageID(i), GX_CC_C0, GX_CC_C2, GX_CC_CPREV, GX_CC_ZERO);
+		GXSetTevColorIn(GXTevStageID(i), GX_CC_C0, GX_CC_C1, GX_CC_CPREV, GX_CC_ZERO);
 		GXSetTevAlphaIn(GXTevStageID(i), GX_CA_A0, GX_CA_A1, GX_CA_APREV, GX_CA_ZERO);
 		GXSetTevColorOp(GXTevStageID(i), GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
 		GXSetTevAlphaOp(GXTevStageID(i), GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);

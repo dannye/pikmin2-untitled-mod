@@ -841,10 +841,10 @@ typedef enum _GXTevColorArg {
 	GX_CC_CPREV = 0,
 	GX_CC_APREV = 1,
 	GX_CC_C0    = 2,
-	GX_CC_C1    = 3,
-	GX_CC_C2    = 4,
-	GX_CC_A0    = 5,
-	GX_CC_A1    = 6,
+	GX_CC_A0    = 3,
+	GX_CC_C1    = 4,
+	GX_CC_A1    = 5,
+	GX_CC_C2    = 6,
 	GX_CC_A2    = 7,
 	GX_CC_TEXC  = 8,
 	GX_CC_TEXA  = 9,
@@ -1549,6 +1549,9 @@ typedef enum _GXXFRegs {
 	GX_XF_REG_DUALTEX6     = 0x1056,
 	GX_XF_REG_DUALTEX7     = 0x1057,
 } GXXFRegs;
+
+#define XF_REG_TEX(proj, form, tgType, row, embossRow, embossLit) \
+	((proj) << 1 | (form) << 2 | (tgType) << 4 | (row) << 7 | (embossRow) << 12 | (embossLit) << 15)
 
 // BP GenMode locators.
 typedef enum _GXBPGenMode {
