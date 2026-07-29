@@ -320,7 +320,7 @@ void Section::doUpdateMainTitle()
 			GameFlow::mActiveSectionFlag = GameFlow::SN_SingleGame;
 			break;
 		case ebi::TMainTitleMgr::Select_Challenge:
-			GameFlow::mActiveSectionFlag = GameFlow::SN_ChallengeGame;
+			GameFlow::mActiveSectionFlag = GameFlow::SN_FruitGame; // GameFlow::SN_ChallengeGame
 			break;
 		case ebi::TMainTitleMgr::Select_Vs:
 			GameFlow::mActiveSectionFlag = GameFlow::SN_VSGame;

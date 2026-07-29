@@ -159,10 +159,13 @@ ISection* GameFlow::createSection(JKRHeap* heap)
 		section = new Game::SingleGameSection(heap);
 		break;
 	case SN_ChallengeGame:
-		section = new Game::VsGameSection(heap, false);
+		section = new Game::VsGameSection(heap, Game::MODETYPE_Challenge);
 		break;
 	case SN_VSGame:
-		section = new Game::VsGameSection(heap, true);
+		section = new Game::VsGameSection(heap, Game::MODETYPE_Versus);
+		break;
+	case SN_FruitGame:
+		section = new Game::VsGameSection(heap, Game::MODETYPE_Fruit);
 		break;
 	default:
 		section = new Title::Section(heap);

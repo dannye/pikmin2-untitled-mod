@@ -216,7 +216,7 @@ void TitleState::execChallenge(VsGameSection* section)
 		case Screen::Game2DMgr::CHECK2D_ChallengeSelect_ExitFinished:
 			OSReport("from Morimun:STATE_GO:stageNo=%d:playType=%d\n", stageNumber, playType);
 
-			if (section->mIsVersusMode) {
+			if (section->isVersusMode()) {
 				gameSystem->mMode = GSM_VERSUS_MODE;
 			} else if (!playType) {
 				gameSystem->mMode = GSM_ONE_PLAYER_CHALLENGE;

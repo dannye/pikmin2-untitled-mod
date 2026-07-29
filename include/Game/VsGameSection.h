@@ -50,6 +50,12 @@ struct StageList;
 struct State;
 } // namespace VsGame
 
+enum ModeType {
+	MODETYPE_Challenge = 0,
+	MODETYPE_Versus    = 1,
+	MODETYPE_Fruit     = 2,
+};
+
 struct VsGameSection : public BaseGameSection {
 	typedef VsGame::State StateType;
 	struct DropCardArg {
@@ -62,7 +68,7 @@ struct VsGameSection : public BaseGameSection {
 		VsSection_MenuKanketuOpen  = 4,
 	};
 
-	VsGameSection(JKRHeap*, bool);
+	VsGameSection(JKRHeap*, u8);
 
 	virtual ~VsGameSection();                                              // _08
 	virtual bool doUpdate();                                               // _3C
@@ -120,7 +126,11 @@ struct VsGameSection : public BaseGameSection {
 	static int mBlueWinCount;
 	static int mDrawCount;
 
-	bool mIsVersusMode;                            // _174
+	bool isChallengeMode() { return mGameMode == MODETYPE_Challenge; }
+	bool isVersusMode()    { return mGameMode == MODETYPE_Versus; }
+	bool isFruitMode()     { return mGameMode == MODETYPE_Fruit; }
+
+	u8 mGameMode;                                  // _174
 	VSFifo* mVsFifo;                               // _178
 	StateMachine<Game::VsGameSection>* mFsm;       // _17C
 	VsGame::State* mCurrentState;                  // _180
@@ -134,6 +144,7 @@ struct VsGameSection : public BaseGameSection {
 	int mDeadPikiCount;                            // _208 - pikmin spawn queue
 	ChallengeGame::StageList* mChallengeStageList; // _20C
 	VsGame::StageList* mVsStageList;               // _210
+	// FruitGame::StageList* mFruitStageList;
 	PikiContainer mContainer1;                     // _214
 	PikiContainer mContainer2;                     // _21C
 	char mCaveInfoFilename[128];                   // _248

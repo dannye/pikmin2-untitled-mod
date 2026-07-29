@@ -80,10 +80,10 @@ int VsGameSection::mDrawCount;
  * @note Size: 0xFC
  */
 
-VsGameSection::VsGameSection(JKRHeap* heap, bool gameMode)
+VsGameSection::VsGameSection(JKRHeap* heap, u8 gameMode)
     : BaseGameSection(heap)
 {
-	mIsVersusMode          = gameMode;
+	mGameMode              = gameMode;
 	mIsChallengePerfect    = true;
 	mChallengeStageNum     = 0;
 	mVsStageNum            = 0;
@@ -169,13 +169,13 @@ void VsGameSection::onInit()
 	clearGetDopeCount();
 	clearGetCherryCount();
 
-	if (mIsVersusMode) {
+	if (isVersusMode()) {
 		gameSystem->mMode = GSM_VERSUS_MODE;
-	} else {
+	} else { // challenge and fruit
 		gameSystem->mMode = GSM_ONE_PLAYER_CHALLENGE;
 	}
 
-	gameSystem->mIsInCave = true;
+	gameSystem->mIsInCave = !isFruitMode();
 	mUnusedFlag           = false;
 	mHole                 = nullptr;
 	mPokoCount            = 0;

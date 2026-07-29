@@ -35,7 +35,7 @@ struct GameFlow : public ISectionMgr {
 		SN_ObjectEditor,        /** Object editor section */
 		SN_SingleGame,          /** Single game section */
 		SN_ChallengeGame,       /** Challenge game section */
-		SN_TestChallenge,       /** Test challenge section */
+		SN_FruitGame,           /** Fruit game section */
 		SN_TekiTest,            /** Teki test section */
 		SN_AnimEditor,          /** Animation editor section */
 		SN_MapPartsEditor,      /** Map parts editor section */
