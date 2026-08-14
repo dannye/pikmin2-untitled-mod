@@ -276,7 +276,8 @@ void preUserCallback(u16, OSContext*, u32, u32)
 
 	u32 track;
 	// the inputs needed to open the crash log
-	u16 inputs[11] = { Controller::PRESS_A,
+	u16 inputs[11] = { 0 };
+	/* u16 inputs[11] = { Controller::PRESS_A,
 		               Controller::PRESS_B,
 		               Controller::PRESS_X,
 		               Controller::PRESS_R,
@@ -286,7 +287,7 @@ void preUserCallback(u16, OSContext*, u32, u32)
 		               Controller::PRESS_DPAD_UP,
 		               Controller::PRESS_DPAD_RIGHT,
 		               Controller::PRESS_Z,
-		               0 };
+		               0 }; */
 
 	int i = 0;
 	// wait until all required inputs are in before passing, disable this if you want instant crash log

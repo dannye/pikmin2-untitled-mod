@@ -79,6 +79,7 @@ void TitleState::init(VsGameSection* section, StateArg* arg)
 
 	section->mChallengeStageData = nullptr;
 	section->mVsStageData        = nullptr;
+	section->mCurrentCourseInfo  = nullptr;
 }
 
 static const char unusedVsTitleString[] = "コンクリート"; // 'concrete'
@@ -230,6 +231,9 @@ void TitleState::execChallenge(VsGameSection* section)
 			P2ASSERTLINE(323, data);
 			section->mChallengeStageData = data;
 			section->mChallengeStageNum  = stageNumber;
+
+			// @todo update challenge stage list data
+			section->mCurrentCourseInfo = stageList->getCourseInfo(stageNumber);
 
 			strcpy(section->mCaveInfoFilename, data->mCaveInfoFilename);
 

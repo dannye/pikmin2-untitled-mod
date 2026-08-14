@@ -754,7 +754,7 @@ void GeneralEnemyMgr::allocateEnemys(u8 viewNum, int heapSize)
 		mHeapSize = ENEMY_HEAP_SIZE_STORY;
 		if (gameSystem) {
 			if (gameSystem->isChallengeMode()) {
-				mHeapSize = ENEMY_HEAP_SIZE_CM;
+				mHeapSize = ENEMY_HEAP_SIZE_FRUIT; // ENEMY_HEAP_SIZE_CM
 			} else if (gameSystem->isVersusMode()) {
 				mHeapSize = ENEMY_HEAP_SIZE_VS;
 			}

@@ -451,9 +451,9 @@ void GameState::checkSMenu(VsGameSection* section)
 		}
 		if (moviePlayer->mDemoState == DEMOSTATE_Inactive && !isFlag(VSGS_PikminExtinct)) {
 			gameSystem->resetFlag(GAMESYS_IsGameWorldActive);
-			MoviePlayArg movieArgs("s12_cv_giveup", 0x0, section->mMovieFinishCallback, 0);
+			MoviePlayArg movieArgs((char*)(gameSystem->mIsInCave ? "s12_cv_giveup" : "s05_pikminzero"), 0x0, section->mMovieFinishCallback, 0);
 			movieArgs.mDelegateStart = section->mMovieStartCallback;
-			Onyon* onyon             = ItemOnyon::mgr->mPod;
+			Onyon* onyon             = gameSystem->mIsInCave ? ItemOnyon::mgr->mPod : ItemOnyon::mgr->mUfo;
 			JUT_ASSERTLINE(652, onyon, "no pod demo 12");
 			movieArgs.mOrigin = onyon->getPosition();
 			movieArgs.mAngle  = onyon->getFaceDir();

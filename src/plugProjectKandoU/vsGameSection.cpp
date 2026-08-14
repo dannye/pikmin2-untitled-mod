@@ -303,6 +303,17 @@ void VsGameSection::doDraw(Graphics& gfx)
  */
 void VsGameSection::onSetSoundScene()
 {
+	if (isFruitMode()) {
+		PSGame::SceneInfo info;
+		setDefaultPSSceneInfo(info);
+		info.setStageFlag(PSGame::SceneInfo::SCENEFLAG_Unk0, PSGame::SceneInfo::SFBS_1);
+		// @todo @fixme
+		info.mSceneType = PSGame::SceneInfo::COURSE_TUTORIALDAY1; // mCurrentCourseInfo->mCourseIndex + 1
+		PSMSetSceneInfo(info);
+		PSSystem::getSceneMgr()->doFirstLoad();
+		naviMgr->createPSMDirectorUpdator();
+		return;
+	}
 	PSGame::CaveFloorInfo floorInfo;
 
 	if (gameSystem->isChallengeMode()) {
@@ -348,6 +359,17 @@ void VsGameSection::initPlayData()
 
 void VsGameSection::onSetupFloatMemory()
 {
+	if (isFruitMode()) {
+		P2ASSERT(mCurrentCourseInfo);
+		Stages::createMapMgr(mCurrentCourseInfo, nullptr);
+		gameSystem->addObjectMgr(mapMgr);
+
+		if (Farm::farmMgr) {
+			gameSystem->addObjectMgr(Farm::farmMgr);
+			BaseHIOSection::addGenNode(Farm::farmMgr);
+		}
+		return;
+	}
 	Farm::farmMgr = nullptr;
 	mTekiMgr      = new VsGame::TekiMgr;
 	mCardMgr      = new VsGame::CardMgr(this, mTekiMgr);
@@ -401,6 +423,10 @@ void VsGameSection::postSetupFloatMemory()
  */
 void VsGameSection::onClearHeap()
 {
+	if (Farm::farmMgr) {
+		Farm::farmMgr->del();
+		gameSystem->detachObjectMgr(Farm::farmMgr);
+	}
 	if (gameSystem->isVersusMode()) {
 		mCherryArray = nullptr;
 		mMaxCherries = 0;

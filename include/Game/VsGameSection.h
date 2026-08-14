@@ -180,6 +180,8 @@ struct VsGameSection : public BaseGameSection {
 	Pellet** mCherryArray;                         // _3D0
 	int mMarbleCount[2];                           // _3D4
 	int mYellowMarbleCounts[2];                    // _3DC
+
+	Game::CourseInfo* mCurrentCourseInfo;
 };
 } // namespace Game
 
