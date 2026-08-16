@@ -503,7 +503,7 @@ bool InteractSuckDone::actOnyon(Onyon* item)
 		}
 	}
 
-	if (gameSystem->isChallengeMode()) {
+	if (gameSystem->isChallengeMode() && item->mOnyonType > ONYON_TYPE_YELLOW) {
 		gameSystem->mSection->addChallengeScore(pellet->mConfig->mParams.mMoney.mData);
 		return true;
 	}

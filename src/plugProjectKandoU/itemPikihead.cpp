@@ -85,7 +85,8 @@ void FallState::onBounce(Item* item, Sys::Triangle* tri)
 		Vector3f pos = item->getPosition();
 
 		// can't plant in bald triangle
-		if (tri && tri->mCode.isBald()) {
+		// @todo @hacky
+		if (tri && tri->mCode.isBald() && !gameSystem->isChallengeMode()) {
 			item->kill(nullptr);
 			return;
 		}
