@@ -3,6 +3,8 @@
 #include "og/Screen/callbackNodes.h"
 #include "trig.h"
 
+#include "Game/GameSystem.h"
+
 namespace og {
 namespace Screen {
 
@@ -139,8 +141,10 @@ void PikminCounterChallenge1P::setCallBack(JKRArchive* arc)
 	search('Ndayicon')->hide();
 
 	CallBack_CounterRV* counter = setCallBack_CounterRV(this, 'c_lr', 'c_lc', 'c_ll', &mDataGame.mMapPikminCount, 10, 3, 1, arc);
-	counter->mScaleUpSoundID    = PSSE_SY_PIKI_INCREMENT;
-	counter->mScaleDownSoundID  = PSSE_SY_PIKI_DECREMENT;
+	if (Game::gameSystem->mIsInCave) {
+		counter->mScaleUpSoundID   = PSSE_SY_PIKI_INCREMENT;
+		counter->mScaleDownSoundID = PSSE_SY_PIKI_DECREMENT;
+	}
 }
 } // namespace Screen
 } // namespace og

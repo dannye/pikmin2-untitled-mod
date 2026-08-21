@@ -6,7 +6,7 @@
 #include "SoundID.h"
 #include "Dolphin/rand.h"
 
-#define ONLY_CHALLENGE_MODE (false)
+#define ONLY_CHALLENGE_MODE (true)
 
 static const char name[] = "ebiScreenTitleMenu";
 

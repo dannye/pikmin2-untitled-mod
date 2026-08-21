@@ -112,6 +112,7 @@ struct Onyon : public BaseItem {
 	CollPart* getFootPart(int);
 	void setSpotEffect(bool);
 	void setSpotEffectActive(bool);
+	void setNaviInRange(int naviIndex, bool inRange);
 	void efxSuikomi();
 	void efxPafuPafu();
 	void efxPafuKira();
@@ -178,6 +179,8 @@ struct Onyon : public BaseItem {
 	SysShape::Animator* mPMotionList;        // _254, list of pAnim objects
 	f32* mPMotionSpeeds;                     // _258
 	f32 mPropera;                            // _25C, controls speed of one of the ships pMotions
+
+	u8 mNaviInRangeFlags;
 };
 
 namespace ItemOnyon {

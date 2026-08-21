@@ -631,6 +631,7 @@ void Onyon::onInit(CreatureInitArg*)
 	mPikiOutJoint      = nullptr;
 	mPikiInJoint       = nullptr;
 	mSuckState         = SUCKSTATE_IdleClosed;
+	mNaviInRangeFlags  = 0;
 }
 
 /**
@@ -1409,6 +1410,22 @@ void Onyon::setSpotEffectActive(bool flag)
 		} else {
 			mContainerAct->fade();
 		}
+	}
+}
+
+void Onyon::setNaviInRange(int naviIndex, bool inRange)
+{
+	u8 oldFlags = mNaviInRangeFlags;
+	if (inRange) {
+		mNaviInRangeFlags |= (1 << naviIndex);
+	} else {
+		mNaviInRangeFlags &= ~(1 << naviIndex);
+	}
+
+	bool wasActive = (oldFlags != 0);
+	bool isActive  = (mNaviInRangeFlags != 0);
+	if (wasActive != isActive) {
+		setSpotEffectActive(isActive);
 	}
 }
 

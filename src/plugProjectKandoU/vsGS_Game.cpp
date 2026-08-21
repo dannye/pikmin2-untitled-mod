@@ -133,7 +133,7 @@ void GameState::do_init(VsGameSection* section)
 		section->createFallPikmins(section->mContainer1, 0);
 	}
 
-	static_cast<newScreen::Mgr*>(Screen::gGame2DMgr->mScreenMgr)->mInCave = 1;
+	static_cast<newScreen::Mgr*>(Screen::gGame2DMgr->mScreenMgr)->mInCave = !section->isFruitMode();
 }
 
 /**
@@ -431,14 +431,11 @@ void GameState::checkSMenu(VsGameSection* section)
 	case Screen::Game2DMgr::CHECK2D_SMenu_Opened:
 		return;
 
-	case Screen::Game2DMgr::CHECK2D_SMenu_GoToSunset:
-		JUT_PANICLINE(617, "ありえないっす\n"); // 'impossible'
-		return;
-
 	case Screen::Game2DMgr::CHECK2D_SMenu_ReturnToFileSelect:
 		JUT_PANICLINE(620, "ない\n"); // 'no'
 		return;
 
+	case Screen::Game2DMgr::CHECK2D_SMenu_GoToSunset:
 	case Screen::Game2DMgr::CHECK2D_SMenu_QuitChallenge:
 		gameSystem->setMoviePause(false, "sm-quit");
 		if (gameSystem->isVersusMode()) {
@@ -478,6 +475,11 @@ void GameState::checkSMenu(VsGameSection* section)
 			if (gameSystem->isVersusMode()) {
 				versus = 1;
 			}
+			if (section->isFruitMode()) {
+				versus = 0;
+				sMenu.mSMenuMap.mCourseIndex = section->mCurrentCourseInfo->mCourseIndex;
+				// @todo set more copied from SingleGameSection::setDispMemberSMenu
+			}
 			sMenu.mOpenMode = versus;
 			Screen::gGame2DMgr->setGamePad(section->mControllerP1);
 			if (Screen::gGame2DMgr->open_SMenu(sMenu)) {
@@ -491,6 +493,11 @@ void GameState::checkSMenu(VsGameSection* section)
 				int versus = 2;
 				if (gameSystem->isVersusMode()) {
 					versus = 1;
+				}
+				if (section->isFruitMode()) {
+					versus = 0;
+					sMenu.mSMenuMap.mCourseIndex = section->mCurrentCourseInfo->mCourseIndex;
+					// @todo set more copied from SingleGameSection::setDispMemberSMenu
 				}
 				sMenu.mOpenMode = versus;
 				Screen::gGame2DMgr->setGamePad(section->mControllerP2);

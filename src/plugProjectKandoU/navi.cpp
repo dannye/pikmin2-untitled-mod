@@ -2715,9 +2715,10 @@ ItemBigFountain::Item* Navi::checkBigFountain()
  */
 Onyon* Navi::checkOnyon()
 {
-	if (!gameSystem->isStoryMode()) {
+	// @hacky
+	/* if (!gameSystem->isStoryMode()) {
 		return nullptr;
-	}
+	} */
 	if (moviePlayer->mDemoState != DEMOSTATE_Inactive) {
 		return nullptr;
 	}
@@ -2739,14 +2740,14 @@ Onyon* Navi::checkOnyon()
 		Onyon* onyon = static_cast<Onyon*>(*iterator);
 		if (onyon->mOnyonType != ONYON_TYPE_POD
 		    && (onyon->mOnyonType != ONYON_TYPE_SHIP || ((playData->hasContainer(White) || playData->hasContainer(Purple))))) {
-			if (onyon->insideAccessArea(navipos)) {
-				onyon->setSpotEffectActive(true);
+			bool inRange = onyon->insideAccessArea(navipos);
+			onyon->setNaviInRange(mNaviIndex, inRange);
+			if (inRange) {
 				PSSystem::spSysIF->playSystemSe(PSSE_SY_ONYON_READY, 0);
 				mNaviControlFlag.unset(2);
 				ret = onyon;
 			} else {
 				mNaviControlFlag.set(2);
-				onyon->setSpotEffectActive(false);
 			}
 		}
 	}

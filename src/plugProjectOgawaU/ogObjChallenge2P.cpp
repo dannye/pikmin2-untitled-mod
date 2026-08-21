@@ -3,6 +3,8 @@
 #include "trig.h"
 #include "System.h"
 
+#include "Game/GameSystem.h"
+
 namespace og {
 namespace newScreen {
 
@@ -125,8 +127,10 @@ void ObjChallenge2P::ScreenSet::init(og::Screen::DataNavi* data, JKRArchive* arc
 	og::Screen::setCallBack_CounterRV(mScreen, 'c_mr', 'c_ml', 'c_ml', &data->mFollowPikis, 3, 2, 1, arc);
 	og::Screen::CallBack_CounterRV* counter
 	    = og::Screen::setCallBack_CounterRV(mScreen, 'c_lr', 'c_ll', 'c_ll', (u32*)&disp->mDataGame.mMapPikminCount, 3, 2, 1, arc);
-	counter->mScaleUpSoundID   = PSSE_SY_PIKI_INCREMENT;
-	counter->mScaleDownSoundID = PSSE_SY_PIKI_DECREMENT;
+	if (Game::gameSystem->mIsInCave) {
+		counter->mScaleUpSoundID   = PSSE_SY_PIKI_INCREMENT;
+		counter->mScaleDownSoundID = PSSE_SY_PIKI_DECREMENT;
+	}
 
 	counter = og::Screen::setCallBack_CounterRV(mScreen, 'dr_r', 'dr_l', 'dr_l', &data->mDope1Count, 3, 2, 1, arc);
 	counter->setCenteringMode(og::Screen::CallBack_CounterRV::ECM_Unknown1);
