@@ -211,7 +211,7 @@ void ObjFloor::setCaveMsgID(u32 caveid, char* buffer)
 		cave_msg = "8414_00"; // "Dream Den"
 		break;
 	case 'c_00':              // challenge mode stages
-		cave_msg = "4900_00"; // "Explorer's Cave"
+		cave_msg = (char*)(Game::gameSystem->mSection->mFruitMode ? "8390_03" : "4900_00"); // "Valley of Repose" / "Explorer's Cave"
 		break;
 	case 'c_01':
 		cave_msg = "4901_00"; // "Brawny Abyss"
@@ -220,13 +220,13 @@ void ObjFloor::setCaveMsgID(u32 caveid, char* buffer)
 		cave_msg = "4902_00"; // "Concrete Maze"
 		break;
 	case 'c_03':
-		cave_msg = "4903_00"; // "Creator's Garden"
+		cave_msg = (char*)(Game::gameSystem->mSection->mFruitMode ? "8393_03" : "4903_00"); // "Wistful Wild" / "Creator's Garden"
 		break;
 	case 'c_04':
 		cave_msg = "4904_00"; // "The Giant's Bath"
 		break;
 	case 'c_05':
-		cave_msg = "4905_00"; // "Lost Toy Box"
+		cave_msg = (char*)(Game::gameSystem->mSection->mFruitMode ? "8392_03" : "4905_00"); // "Perplexing Pool" / "Lost Toy Box"
 		break;
 	case 'c_06':
 		cave_msg = "4906_00"; // "Twilight Garden"
@@ -262,7 +262,7 @@ void ObjFloor::setCaveMsgID(u32 caveid, char* buffer)
 		cave_msg = "4916_00"; // "Breeding Ground"
 		break;
 	case 'c_17':
-		cave_msg = "4917_00"; // "Green Hole"
+		cave_msg = (char*)(Game::gameSystem->mSection->mFruitMode ? "8394_03" : "4917_00"); // "Test Area ID" / "Green Hole"
 		break;
 	case 'c_18':
 		cave_msg = "4918_00"; // "Hazard Training"
@@ -271,7 +271,7 @@ void ObjFloor::setCaveMsgID(u32 caveid, char* buffer)
 		cave_msg = "4919_00"; // "Three Color Training"
 		break;
 	case 'c_20':
-		cave_msg = "4920_00"; // "Novice Training"
+		cave_msg = (char*)(Game::gameSystem->mSection->mFruitMode ? "8391_03" : "4920_00"); // "Awakening Wood" / "Novice Training"
 		break;
 	case 'c_21':
 		cave_msg = "4921_00"; // "Snack Pit"

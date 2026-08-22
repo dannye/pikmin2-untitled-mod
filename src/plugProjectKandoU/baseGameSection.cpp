@@ -246,7 +246,7 @@ void BaseGameSection::init()
 	sys->setFrameRate(2);
 	System::assert_fragmentation("BaseGameSection::MoviePlayer");
 	initJ3D();
-	mUnusedFlag = true;
+	mFruitMode  = false;
 	mapMgr      = nullptr;
 	System::assert_fragmentation("BaseGameSection::InitJ3D");
 	System::assert_fragmentation("BaseGameSection::Before 2D");

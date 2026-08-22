@@ -286,7 +286,7 @@ struct BaseGameSection : public BaseHIOSection {
 	Controller* mControllerP2;                                // _110
 	int mPlayerMode;                                          // _114
 	Splitter* mSplitter;                                      // _118
-	u8 mUnusedFlag;                                           // _11C, true by default, set false in single and vs game
+	u8 mFruitMode;                                            // _11C
 	int _120;                                                 // _120
 	u32 _124;                                                 // _124
 	GameLightMgr* mLightMgr;                                  // _128

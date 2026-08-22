@@ -176,7 +176,7 @@ void VsGameSection::onInit()
 	}
 
 	gameSystem->mIsInCave = !isFruitMode();
-	mUnusedFlag           = false;
+	mFruitMode            = isFruitMode();
 	mHole                 = nullptr;
 	mPokoCount            = 0;
 	mIsMenuRunning        = false;

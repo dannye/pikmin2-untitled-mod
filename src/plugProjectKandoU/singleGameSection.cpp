@@ -287,7 +287,7 @@ void SingleGameSection::onInit()
 	mIsExitingMap = false;
 	clearCaveMenus();
 
-	mUnusedFlag       = false;
+	mFruitMode        = false;
 	mLoadGameCallback = new Delegate<SingleGameSection>(this, setupFloatMemory);
 
 	mFsm = new SingleGame::FSM;
