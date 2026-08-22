@@ -9,6 +9,8 @@
 #include "Dolphin/rand.h"
 #include "trig.h"
 
+#include "Game/GameSystem.h"
+
 namespace og {
 namespace newScreen {
 
@@ -598,7 +600,7 @@ void ObjFloor::doDraw(Graphics& gfx)
 	mScreenName->draw(gfx, *graf);
 	graf->setPort();
 
-	if (!isVS()) {
+	if (!isVS() && Game::gameSystem->mIsInCave) {
 		mSublevelPane->show();
 	} else {
 		mSublevelPane->hide();
