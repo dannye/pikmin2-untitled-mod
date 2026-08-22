@@ -68,7 +68,7 @@ void SMenuMap::doUserCallBackFunc(Resource::MgrCommand* command)
  */
 void SMenuMap::doCreateObj(JKRArchive* archive)
 {
-	registObj(new Drought::Screen::GoHereMapMenu("SMenuMap screen"), archive);
+	registObj(Game::gameSystem->isMultiplayerMode() ? new ObjSMenuMap("SMenuMap screen") : new Drought::Screen::GoHereMapMenu("SMenuMap screen"), archive);
 	setColorBG(0, 0, 0, ObjSMenuMap::msVal._1B);
 }
 
