@@ -17,7 +17,7 @@
 #include "efx/TPk.h"
 
 #define CH_SCORE_POKO_MULTIPLIER   10
-#define CH_SCORE_PIKMIN_MULTIPLIER 10
+#define CH_SCORE_PIKMIN_MULTIPLIER 1
 
 struct JUTTexture;
 struct LightObj;

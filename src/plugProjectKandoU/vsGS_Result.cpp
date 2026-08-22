@@ -66,7 +66,7 @@ void ResultState::prepareMorimuraInfo(VsGameSection* section)
 		section->mTimeLimit = 0.0f;
 	}
 
-	mPikminLeft    = GameStat::alivePikis;
+	mPikminLeft    = GameStat::getAllPikmins(-1);
 	mPokoTimeScore = section->mPokoCount + (int)section->mTimeLimit;
 
 	BOOL isMultiplayer = FALSE;
