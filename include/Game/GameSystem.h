@@ -74,6 +74,8 @@ struct GameSystem : public NodeObjectMgr<GenericObjectMgr> {
 	inline bool isTwoPlayerMode() { return mMode == GSM_TWO_PLAYER_CHALLENGE; }
 	bool isZukanMode() { return mMode == GSM_PIKLOPEDIA; }
 
+	bool isFruitMode() { return mSection && mSection->mFruitMode; }
+
 	inline void setFlag(u32 flag) { mFlags.typeView |= flag; }
 	inline void resetFlag(u32 flag) { mFlags.typeView &= ~flag; }
 	inline bool isFlag(u32 flag) { return mFlags.typeView & flag; }

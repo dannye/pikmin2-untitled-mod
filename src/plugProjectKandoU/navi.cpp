@@ -2715,10 +2715,9 @@ ItemBigFountain::Item* Navi::checkBigFountain()
  */
 Onyon* Navi::checkOnyon()
 {
-	// @hacky
-	/* if (!gameSystem->isStoryMode()) {
+	if (!gameSystem->isStoryMode() && !gameSystem->isFruitMode()) {
 		return nullptr;
-	} */
+	}
 	if (moviePlayer->mDemoState != DEMOSTATE_Inactive) {
 		return nullptr;
 	}

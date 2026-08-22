@@ -141,7 +141,7 @@ void PikminCounterChallenge1P::setCallBack(JKRArchive* arc)
 	search('Ndayicon')->hide();
 
 	CallBack_CounterRV* counter = setCallBack_CounterRV(this, 'c_lr', 'c_lc', 'c_ll', &mDataGame.mMapPikminCount, 10, 3, 1, arc);
-	if (Game::gameSystem->mIsInCave) {
+	if (!Game::gameSystem->isFruitMode()) {
 		counter->mScaleUpSoundID   = PSSE_SY_PIKI_INCREMENT;
 		counter->mScaleDownSoundID = PSSE_SY_PIKI_DECREMENT;
 	}

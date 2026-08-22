@@ -127,7 +127,7 @@ void ObjChallenge2P::ScreenSet::init(og::Screen::DataNavi* data, JKRArchive* arc
 	og::Screen::setCallBack_CounterRV(mScreen, 'c_mr', 'c_ml', 'c_ml', &data->mFollowPikis, 3, 2, 1, arc);
 	og::Screen::CallBack_CounterRV* counter
 	    = og::Screen::setCallBack_CounterRV(mScreen, 'c_lr', 'c_ll', 'c_ll', (u32*)&disp->mDataGame.mMapPikminCount, 3, 2, 1, arc);
-	if (Game::gameSystem->mIsInCave) {
+	if (!Game::gameSystem->isFruitMode()) {
 		counter->mScaleUpSoundID   = PSSE_SY_PIKI_INCREMENT;
 		counter->mScaleDownSoundID = PSSE_SY_PIKI_DECREMENT;
 	}
