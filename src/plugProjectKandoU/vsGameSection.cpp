@@ -821,6 +821,7 @@ void VsGameSection::addChallengeScore(int score)
 {
 	mPokoCount += score;
 	if (isFruitMode() && Radar::Mgr::getNumOtakaraItems() == 1) {
+		mIsChallengePerfect = true;
 		VsGame::ResultArg arg;
 		arg.mEndFlag.clear();
 		arg.mEndFlag.typeView |= 0x1;
@@ -1016,7 +1017,9 @@ bool GameMessageVsBirthTekiTreasure::actVs(VsGameSection* section)
  */
 bool GameMessageVsPikminDead::actVs(VsGameSection* section)
 {
-	section->mIsChallengePerfect = false;
+	if (!section->isFruitMode()) {
+		section->mIsChallengePerfect = false;
+	}
 	section->mDeadPikiCount++;
 	return true;
 }

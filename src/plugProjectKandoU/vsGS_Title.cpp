@@ -59,7 +59,7 @@ void TitleState::init(VsGameSection* section, StateArg* arg)
 		section->clearHeap();
 	}
 
-	section->mIsChallengePerfect = true;
+	section->mIsChallengePerfect = !section->isFruitMode();
 	section->mDeadPikiCount      = false;
 	mHeap                        = nullptr;
 	mExpHeap                     = nullptr;
