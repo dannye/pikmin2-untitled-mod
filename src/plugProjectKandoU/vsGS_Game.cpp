@@ -534,7 +534,6 @@ void GameState::checkSMenu(VsGameSection* section)
 			}
 			if (section->isFruitMode()) {
 				versus = 0;
-				sMenu.mSMenuMap.mCourseIndex = section->mCurrentCourseInfo->mCourseIndex;
 				setDispMemberSMenu(sMenu, section);
 			}
 			sMenu.mOpenMode = versus;

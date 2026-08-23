@@ -238,7 +238,11 @@ void TitleState::execChallenge(VsGameSection* section)
 			strcpy(section->mCaveInfoFilename, data->mCaveInfoFilename);
 
 			load.mGameLoadType   = 0; // why...
-			section->mContainer1 = data->mPikiContainer;
+			if (section->isFruitMode()) {
+				section->mContainer1.clear();
+			} else {
+				section->mContainer1 = data->mPikiContainer;
+			}
 
 			playData->setDopeCount(0, data->mStartNumSpicy);
 			playData->setDopeCount(1, data->mStartNumBitter);
