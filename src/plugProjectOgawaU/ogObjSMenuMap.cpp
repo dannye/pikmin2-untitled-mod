@@ -368,6 +368,11 @@ void ObjSMenuMap::initMapIcon(JKRArchive* arc)
 						                       msVal.mItemPelletBlackColor.a);
 						copyPic->setWhite(white);
 						copyPic->setBlack(black);
+					} else if (objType == Radar::MAP_TREASURE || objType == Radar::MAP_SWALLOWED_TREASURE) {
+						JUtility::TColor white(255, 255, 255, 255);
+						JUtility::TColor black(0, 0, 0, 0);
+						copyPic->setWhite(white);
+						copyPic->setBlack(black);
 					}
 					if (objType == Radar::MAP_INCOMPLETE_CAVE || objType == Radar::MAP_COMPLETED_CAVE) {
 						u64 caveTag = og::Screen::maskTag(caveIDtoMsgID(cPoint->mCaveID), 1, 3);
