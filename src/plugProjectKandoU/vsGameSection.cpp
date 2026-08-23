@@ -820,6 +820,12 @@ void VsGameSection::createVsPikmins()
 void VsGameSection::addChallengeScore(int score)
 {
 	mPokoCount += score;
+	if (isFruitMode() && Radar::Mgr::getNumOtakaraItems() == 1) {
+		VsGame::ResultArg arg;
+		arg.mEndFlag.clear();
+		arg.mEndFlag.typeView |= 0x1;
+		mFsm->transit(this, VsGame::VGS_Result, &arg);
+	}
 }
 
 /**
