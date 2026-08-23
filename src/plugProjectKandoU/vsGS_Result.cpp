@@ -98,7 +98,7 @@ void ResultState::prepareMorimuraInfo(VsGameSection* section)
 	mResultInfo->mStageIndex   = stageIndex;
 	mResultInfo->mTimeLeft     = (int)section->mTimeLimit;
 	mResultInfo->mPokos        = section->mPokoCount * CH_SCORE_POKO_MULTIPLIER;
-	mResultInfo->mPikminLeft   = mPikminLeft * CH_SCORE_PIKMIN_MULTIPLIER;
+	mResultInfo->mPikminLeft   = mPikminLeft * (section->isFruitMode() ? CH_SCORE_PIKMIN_MULTIPLIER_FRUIT : CH_SCORE_PIKMIN_MULTIPLIER);
 	mResultInfo->mScore        = mResultInfo->mPokos + mResultInfo->mTimeLeft + mResultInfo->mPikminLeft;
 	mResultInfo->mHighScore    = highScore;
 

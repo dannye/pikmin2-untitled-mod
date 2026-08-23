@@ -10,6 +10,8 @@
 #include "Radar.h"
 #include "nans.h"
 
+#include "Game/GameSystem.h"
+
 static const u32 padding[] = { 0, 0, 0 };
 
 namespace og {
@@ -344,14 +346,17 @@ void ObjSMenuMap::initMapIcon(JKRArchive* arc)
 				}
 				break;
 
-			case Radar::MAP_TREASURE:
-			case Radar::MAP_SWALLOWED_TREASURE:
-			case Radar::MAP_UPGRADE:
 			case Radar::MAP_UNENTERED_CAVE:
 				// don't mark these on the map - there is a rubber duck icon for treasures in mIconScreen though.
 				break;
 
 			default:
+				if (
+					(objType == Radar::MAP_TREASURE || objType == Radar::MAP_SWALLOWED_TREASURE || objType == Radar::MAP_UPGRADE) &&
+					!Game::gameSystem->isFruitMode()
+				) {
+					break;
+				}
 				// mark everything else - pikmin, ship/pod, geyser/hole, complete/incomplete cave
 				u64 tag               = 'icon_000' + (count % 10) + (((count / 10) % 10) * 0x100) + (((count / 100) % 10) * 0x10000);
 				J2DPictureEx* copyPic = og::Screen::CopyPictureToPane(cPane, mMapTexPane, newPos.x, newPos.y, tag);
