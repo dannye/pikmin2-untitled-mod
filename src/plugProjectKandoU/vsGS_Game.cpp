@@ -418,6 +418,63 @@ void GameState::checkFindKeyDemo(VsGameSection* section)
 	}
 }
 
+void GameState::setDispMemberSMenu(og::Screen::DispMemberSMenuAll& disp, VsGameSection* section)
+{
+	// General data
+	Navi* navi = naviMgr->getActiveNavi();
+	int id     = NAVIID_Olimar;
+	if (navi) {
+		id = navi->mNaviIndex;
+	}
+	disp.mIsDay1 = false;
+
+	// Map screen data
+	disp.mSMenuMap.mDataMap.mOnyonPikminCounts[og::Screen::MAPPIKI_Red]    = playData->mPikiContainer.getColorSum(Red);
+	disp.mSMenuMap.mDataMap.mOnyonPikminCounts[og::Screen::MAPPIKI_Yellow] = playData->mPikiContainer.getColorSum(Yellow);
+	disp.mSMenuMap.mDataMap.mOnyonPikminCounts[og::Screen::MAPPIKI_Blue]   = playData->mPikiContainer.getColorSum(Blue);
+	disp.mSMenuMap.mDataMap.mOnyonPikminCounts[og::Screen::MAPPIKI_White]  = playData->mPikiContainer.getColorSum(White);
+	disp.mSMenuMap.mDataMap.mOnyonPikminCounts[og::Screen::MAPPIKI_Purple] = playData->mPikiContainer.getColorSum(Purple);
+
+	disp.mSMenuMap.mDataMap.mCurrentPikminCounts[og::Screen::MAPPIKI_Red]    = GameStat::formationPikis.getCount(id, Red);
+	disp.mSMenuMap.mDataMap.mCurrentPikminCounts[og::Screen::MAPPIKI_Yellow] = GameStat::formationPikis.getCount(id, Yellow);
+	disp.mSMenuMap.mDataMap.mCurrentPikminCounts[og::Screen::MAPPIKI_Blue]   = GameStat::formationPikis.getCount(id, Blue);
+	disp.mSMenuMap.mDataMap.mCurrentPikminCounts[og::Screen::MAPPIKI_White]  = GameStat::formationPikis.getCount(id, White);
+	disp.mSMenuMap.mDataMap.mCurrentPikminCounts[og::Screen::MAPPIKI_Purple] = GameStat::formationPikis.getCount(id, Purple);
+
+	int form  = GameStat::formationPikis;
+	int work  = GameStat::workPikis;
+	int alive = GameStat::alivePikis;
+
+	// @todo replace _aiConstants->mDebt.mData with level's par score
+
+	disp.mSMenuMap.mDataMap.mFreePikmin = alive - form - work;
+	disp.mSMenuMap.mDataMap.mPokos      = _aiConstants->mDebt.mData - section->mPokoCount;
+	disp.mSMenuMap.mInCave              = gameSystem->mIsInCave;
+	disp.mSMenuMap.mActiveNavi          = true;
+	disp.mSMenuMap.mUnlockedReds        = playData->hasContainer(Red);
+	disp.mSMenuMap.mUnlockedYellows     = playData->hasContainer(Yellow);
+	disp.mSMenuMap.mUnlockedBlues       = playData->hasContainer(Blue);
+	disp.mSMenuMap.mUnlockedWhites      = playData->hasContainer(White);
+	disp.mSMenuMap.mUnlockedPurples     = playData->hasContainer(Purple);
+	disp.mSMenuMap.mCourseIndex         = section->mCurrentCourseInfo->mCourseIndex;
+
+	// Items screen data
+	disp.mSMenuItem.mBitterSprayCount = playData->getDopeCount(SPRAY_TYPE_BITTER);
+	disp.mSMenuItem.mBitterBerryCount = playData->getDopeFruitCount(SPRAY_TYPE_BITTER);
+	disp.mSMenuItem.mSpicySprayCount  = playData->getDopeCount(SPRAY_TYPE_SPICY);
+	disp.mSMenuItem.mSpicyBerryCount  = playData->getDopeFruitCount(SPRAY_TYPE_SPICY);
+	for (int i = 0; i < OlimarData::ODII_FIRST_NON_EXPLORATION_KIT_ITEM; i++) {
+		disp.mSMenuItem.mExplorationKitInventory[i] = false;
+	}
+
+	// Pause Screen
+	disp.mSMenuPause.mDebtRemaining = _aiConstants->mDebt.mData - section->mPokoCount;
+	disp.mSMenuPause.mPokoCount     = section->mPokoCount;
+
+	disp.mSMenuItem.mIsBitterUnlocked = true;
+	disp.mSMenuItem.mIsSpicyUnlocked  = true;
+}
+
 /**
  * @note Address: 0x8022A378
  * @note Size: 0x3E4
@@ -478,7 +535,7 @@ void GameState::checkSMenu(VsGameSection* section)
 			if (section->isFruitMode()) {
 				versus = 0;
 				sMenu.mSMenuMap.mCourseIndex = section->mCurrentCourseInfo->mCourseIndex;
-				// @todo set more copied from SingleGameSection::setDispMemberSMenu
+				setDispMemberSMenu(sMenu, section);
 			}
 			sMenu.mOpenMode = versus;
 			Screen::gGame2DMgr->setGamePad(section->mControllerP1);
@@ -496,8 +553,7 @@ void GameState::checkSMenu(VsGameSection* section)
 				}
 				if (section->isFruitMode()) {
 					versus = 0;
-					sMenu.mSMenuMap.mCourseIndex = section->mCurrentCourseInfo->mCourseIndex;
-					// @todo set more copied from SingleGameSection::setDispMemberSMenu
+					setDispMemberSMenu(sMenu, section);
 				}
 				sMenu.mOpenMode = versus;
 				Screen::gGame2DMgr->setGamePad(section->mControllerP2);

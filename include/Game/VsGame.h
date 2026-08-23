@@ -337,6 +337,7 @@ struct GameState : public State {
 
 	void clearLoseCauses();
 	void checkFindKeyDemo(VsGameSection*);
+	void setDispMemberSMenu(og::Screen::DispMemberSMenuAll&, VsGameSection*);
 	void checkSMenu(VsGameSection*);
 	void checkPikminZero(VsGameSection*);
 	void open_GameChallenge(VsGameSection*, int);
