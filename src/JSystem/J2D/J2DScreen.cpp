@@ -726,21 +726,3 @@ void J2DScreen::setAnimation(J2DAnmVisibilityFull* animation)
 {
 	J2DPane::setVisibileAnimation(animation);
 }
-
-/**
- * @note Address: 0x80040F0C
- * @note Size: 0x20
- */
-void J2DScreen::setAnimation(J2DAnmTransform* animation)
-{
-	J2DPane::setAnimation(animation);
-}
-
-/**
- * @note Address: 0x80040F2C
- * @note Size: 0x20
- */
-void J2DScreen::setAnimation(J2DAnmBase* animation)
-{
-	J2DPane::setAnimation(animation);
-}

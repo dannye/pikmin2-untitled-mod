@@ -1158,13 +1158,4 @@ bool TCountDownScene::doStart(Screen::StartSceneArg* arg)
 	}
 }
 
-/**
- * @note Address: 0x80345F64
- * @note Size: 0xC
- */
-void TTestBase::doUpdateFadeinFinish()
-{
-	mCanInput = true;
-}
-
 }; // namespace Morimura

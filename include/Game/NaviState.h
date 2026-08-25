@@ -90,10 +90,10 @@ struct NaviAbsorbState : public NaviState {
 	virtual void init(Navi*, StateArg*);                       // _08
 	virtual void exec(Navi*);                                  // _0C
 	virtual void cleanup(Navi*);                               // _10
+	virtual bool vsUsableY() { return false; }                 // _44 (weak)
 	virtual bool invincible() { return true; }                 // _20 (weak)
 	virtual void onKeyEvent(Navi*, const SysShape::KeyEvent&); // _24
 	virtual bool pressable() { return false; }                 // _34 (weak)
-	virtual bool vsUsableY() { return false; }                 // _44 (weak)
 
 	// _00     = VTBL
 	// _00-_10 = NaviState
@@ -677,8 +677,8 @@ struct NaviPressedState : public NaviState {
 	virtual void init(Navi*, StateArg*);       // _08
 	virtual void exec(Navi*);                  // _0C
 	virtual void cleanup(Navi*);               // _10
-	virtual bool invincible() { return true; } // _20 (weak)
 	virtual bool pressable() { return false; } // _34 (weak)
+	virtual bool invincible() { return true; } // _20 (weak)
 	virtual bool vsUsableY() { return false; } // _44 (weak)
 
 	// _00     = VTBL

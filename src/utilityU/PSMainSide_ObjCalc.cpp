@@ -40,6 +40,14 @@ void ObjCalc_2PGame::newInstance_2PGame()
 	new ObjCalc_2PGame;
 }
 
+inline f32 VecDistance(Vec& a, Vec b)
+{
+	volatile f32 x = a.x - b.x;
+	volatile f32 y = a.y - b.y;
+	volatile f32 z = a.z - b.z;
+	return SQUARE(x) + SQUARE(y) + SQUARE(z);
+}
+
 /**
  * @note Address: 0x80472970
  * @note Size: 0x3BC
@@ -51,38 +59,26 @@ u8 ObjCalc_2PGame::getPlayerNo(Vec& pos)
 		return 0;
 
 	case OBJCALC_0:
+		Vec vnpos[4];
 		f32 dists[2] = { 100000.0f, 1000000.0f };
 		Iterator<Game::Navi> it(Game::naviMgr);
 		int i = 0;
 		CI_LOOP(it)
 		{
 			Game::Navi* navi = *it;
-			Vector3f pos     = navi->getPosition();
-			f32 x, y, z;
-			z = pos.z;
-			y = pos.y;
-			x = pos.x;
-			P2ASSERTLINE(65, navi);
+			Vector3f npos    = navi->getPosition();
+			vnpos[i].x       = npos.x;
+			vnpos[i].y       = npos.y;
+			vnpos[i].z       = npos.z;
+			P2ASSERTLINE(65, vnpos != 0);
 			P2ASSERTLINE(66, i < 2);
 
-			// this makes the stack line up, but uhhhhh
-			volatile Vector3f v1 = pos;
-			volatile Vector3f v2 = pos;
-			volatile Vector3f v3 = pos;
-			volatile Vector3f v4 = pos;
-			volatile Vector3f v5 = pos;
-			volatile Vector3f v6 = pos;
+			dists[i] = VecDistance(pos, vnpos[i]);
 			i++;
-
-			Vector3f dist;
-			dist.x   = pos.x - x;
-			dist.y   = pos.y - y;
-			dist.z   = pos.z - z;
-			dists[i] = dist.sqrMagnitude();
 		}
-		return !(dists[0] < dists[1]);
+		return bool(dists[0] < dists[1]);
 	default:
-		JUT_PANICLINE(77, "P2Assert");
+		P2ASSERTLINE(77, false);
 		return 0;
 	}
 	/*

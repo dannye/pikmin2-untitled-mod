@@ -758,3 +758,10 @@ TitleDummy::Section::~Section()
 {
 	// UNUSED FUNCTION
 }
+
+static void fakefunc()
+{
+	// need this to spawn before ~HIORootNode
+	Title::Section* s = new Title::Section(0);
+	s->forceReset();
+}

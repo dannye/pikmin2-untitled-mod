@@ -355,7 +355,6 @@ struct ObjDayEndResultIncP : public ObjDayEndResultBase {
 
 	ObjDayEndResultIncP();
 
-	virtual ~ObjDayEndResultIncP() { }                          // _08 (weak)
 	virtual void doCreate(JKRArchive*);                         // _4C
 	virtual bool doUpdateFadein();                              // _50
 	virtual bool doUpdate();                                    // _58
@@ -457,7 +456,6 @@ struct ObjDayEndResultMail : public ObjDayEndResultBase {
 		mAlpha               = 0;
 	}
 
-	virtual ~ObjDayEndResultMail() { }                          // _08 (weak)
 	virtual bool doStart(const ::Screen::StartSceneArg*);       // _44
 	virtual void doCreate(JKRArchive*);                         // _4C
 	virtual bool doUpdateFadein();                              // _50
@@ -529,7 +527,6 @@ struct ObjDayEndResultItem : public ObjDayEndResultBase {
 
 	ObjDayEndResultItem();
 
-	virtual ~ObjDayEndResultItem() { }                          // _08 (weak)
 	virtual bool doStart(const ::Screen::StartSceneArg*);       // _44
 	virtual void doCreate(JKRArchive*);                         // _4C
 	virtual bool doUpdateFadein();                              // _50

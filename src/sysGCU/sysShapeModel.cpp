@@ -1,5 +1,4 @@
 #include "SysShape/Model.h"
-#include "SysShape/Joint.h"
 #include "Graphics.h"
 #include "Viewport.h"
 #include "nans.h"
@@ -722,15 +721,6 @@ void Model::setCurrentViewNo(u32 viewportNumber)
 bool Model::isMtxImmediate()
 {
 	return mJ3dModel->getModelData()->getFlag() >> 4 & 1;
-}
-
-/**
- * @note Address: 0x8043F130
- * @note Size: 0x30
- */
-void Model::jointVisible(bool flag, Joint* joint)
-{
-	jointVisible(flag, joint->mJointIndex);
 }
 
 } // namespace SysShape

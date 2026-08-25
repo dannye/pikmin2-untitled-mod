@@ -50,21 +50,6 @@ struct THiScoreListScreen : public TListScreen {
 	// _00     = VTBL
 	// _00-_18 = TScreenBase
 };
-
-struct THiScoreScene : public THIOScene {
-	THiScoreScene();
-
-	virtual SceneType getSceneType() { return SCENE_HIGH_SCORE; }        // _08 (weak)
-	virtual ScreenOwnerID getOwnerID() { return OWNER_MRMR; }            // _0C (weak)
-	virtual ScreenMemberID getMemberID() { return MEMBER_HIGH_SCORE; }   // _10 (weak)
-	virtual const char* getResName() const { return "res_hiscore.szs"; } // _1C
-	virtual void doCreateObj(JKRArchive*);                               // _20 (weak)
-
-	// _00      = VTBL
-	// _00-_224 = THIOScene
-	// _220, treat as THiScore*
-};
-
 struct THiScore : public TScrollList {
 	THiScore();
 
@@ -160,6 +145,26 @@ struct THiScore : public TScrollList {
 		f32 _0C;
 		f32 _10;
 	} mScrollParm;
+};
+
+struct THiScoreScene : public THIOScene {
+	THiScoreScene();
+
+	virtual const char* getResName() const { return "res_hiscore.szs"; } // _1C
+	virtual void doCreateObj(JKRArchive* arc)
+	{
+		THiScore* obj = new THiScore;
+		registObj(obj, arc);
+		mObject = obj;
+
+	} // _20 (weak)
+	virtual SceneType getSceneType() { return SCENE_HIGH_SCORE; }      // _08 (weak)
+	virtual ScreenOwnerID getOwnerID() { return OWNER_MRMR; }          // _0C (weak)
+	virtual ScreenMemberID getMemberID() { return MEMBER_HIGH_SCORE; } // _10 (weak)
+
+	// _00      = VTBL
+	// _00-_224 = THIOScene
+	// _220, treat as THiScore*
 };
 
 } // namespace Morimura

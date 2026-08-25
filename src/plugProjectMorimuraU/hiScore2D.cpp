@@ -11,12 +11,11 @@ static const char name[] = "hiScore2D";
 
 namespace Morimura {
 
-bool THiScore::mForceClear  = false;
-bool THiScore::mForceClear2 = false;
-bool THiScore::mLoopDrum    = false;
-bool THiScore::mChangeAlpha = true;
-
+bool THiScore::mForceClear         = false;
+bool THiScore::mForceClear2        = false;
+bool THiScore::mLoopDrum           = false;
 f32 THiScore::mPictureOffsetY      = -8.0f;
+bool THiScore::mChangeAlpha        = true;
 f32 THiScore::mListOffsetY         = 25.0f;
 f32 THiScore::mClearListHeightRate = 1.55f;
 ResTIMG* THiScore::mPicTexture[16] = { nullptr };
@@ -2870,17 +2869,6 @@ lbl_8038071C:
  */
 THiScoreScene::THiScoreScene()
 {
-}
-
-/**
- * @note Address: 0x803807B0
- * @note Size: 0x68
- */
-void THiScoreScene::doCreateObj(JKRArchive* arc)
-{
-	THiScore* obj = new THiScore;
-	registObj(obj, arc);
-	mObject = obj;
 }
 
 THiScore::StaticValues THiScore::mScrollParm;
