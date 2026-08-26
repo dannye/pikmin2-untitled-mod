@@ -3552,8 +3552,10 @@ void GridDivider::create(BoundBox& box, int countX, int countZ, Sys::VertexTable
  * @note Address: N/A
  * @note Size: 0x6C
  */
-void GridDivider::write(Stream&)
+void GridDivider::write(Stream& stream)
 {
+	mVertexTable->write(stream);
+	mTriangleTable->write(stream);
 	// UNUSED FUNCTION
 }
 
@@ -3561,7 +3563,7 @@ void GridDivider::write(Stream&)
  * @note Address: N/A
  * @note Size: 0xC0
  */
-void GridInfo::write(Stream&)
+void GridInfo::write(Stream& stream)
 {
 	// UNUSED FUNCTION
 }

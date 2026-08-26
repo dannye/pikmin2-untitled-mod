@@ -2025,12 +2025,12 @@ void BaseGameSection::setupFixMemory_dvdload()
 
 	sys->heapStatusStart("particle", nullptr);
 	ParticleMgr::globalInstance();
-	particleMgr->createHeap(0x180000);
+	particleMgr->createHeap(PARTICLE_MGR_HEAP_SIZE);
 	particleMgr->createMgr("user/Ebisawa/effect/game.jpc", 2000, 300, 0x80);
 	addGenNode(particleMgr);
 
 	TParticle2dMgr::globalInstance();
-	particle2dMgr->createHeap(256000);
+	particle2dMgr->createHeap(PARTICLE_MGR2D_HEAP_SIZE);
 	particle2dMgr->createMgr("user/Ebisawa/effect/eff2d_game2d.jpc", 0x1d4, 0x28, 0x80);
 	addGenNode(particle2dMgr);
 

@@ -610,7 +610,7 @@ void Section::loadResource()
 
 	sys->heapStatusStart("TParticle2dMgr", nullptr);
 	TParticle2dMgr::globalInstance();
-	particle2dMgr->createHeap(0x100000);
+	particle2dMgr->createHeap(TITLESCREEN_PARTICLE_HEAP_SIZE);
 	particle2dMgr->createMgr("user/Ebisawa/effect/eff2d_game2d.jpc", 2000, 0x80, 0x80);
 	sys->heapStatusEnd("TParticle2dMgr");
 
@@ -757,4 +757,11 @@ void TitleDummy::Section::doDraw(Graphics& gfx)
 TitleDummy::Section::~Section()
 {
 	// UNUSED FUNCTION
+}
+
+static void fakefunc()
+{
+	// need this to spawn before ~HIORootNode
+	Title::Section* s = new Title::Section(0);
+	s->forceReset();
 }
