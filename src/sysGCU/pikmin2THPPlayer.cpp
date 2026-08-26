@@ -255,7 +255,7 @@ void THPPlayer::init(JKRHeap* heap)
 	JKRHeap* currHeap = JKRGetCurrentHeap();
 	heap              = (!heap) ? currHeap : heap;
 	heap->becomeCurrentHeap();
-	mHeap = JKRSolidHeap::create(0x300000, heap, true);
+	mHeap = JKRSolidHeap::create(THP_PLAYER_HEAP_SIZE, heap, true);
 
 #if BUILDTARGET == USADEMO1 // demo
 	P2ASSERTLINE(424, mHeap);

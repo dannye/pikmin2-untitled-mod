@@ -212,7 +212,6 @@ struct MovieList : public CNode {
 // Size: 0x1F8
 struct MoviePlayer : public JKRDisposer {
 
-#define MOVIEPLAYER_HEAP_SIZE     0x60400
 #define MOVIEPLAYER_CONTEXT_COUNT 8 // (max number of cutscenes that can be queued at once)
 
 	enum PlayStatus { MOVIEPLAY_SUCCESS, MOVIEPLAY_NOCONFIG, MOVIEPLAY_INQUEUE, MOVIEPLAY_QUEUEFAIL };

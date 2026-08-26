@@ -9,15 +9,6 @@
 #include "JSystem/JKernel/JKRHeap.h"
 #include "Sys/Sphere.h"
 
-// enemy heap sizes for various modes
-// linked, changeable
-#define ENEMY_HEAP_SIZE_STORY (0x200800)
-#define ENEMY_HEAP_SIZE_CM    (0x177000)
-#define ENEMY_HEAP_SIZE_VS    (0x1C2000)
-
-// not linked yet
-#define ENEMY_HEAP_SIZE_ZUKAN (0xFA000)
-
 namespace Game {
 struct CreatureKillArg;
 

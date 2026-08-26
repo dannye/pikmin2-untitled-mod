@@ -413,7 +413,7 @@ System::System()
 	sUseABXCommand = true;
 	initCurrentHeapMutex();
 	JKRHeap* heap = JKRGetCurrentHeap();
-	mSysHeap      = JKRExpHeap::create(0x428000, nullptr, true);
+	mSysHeap      = JKRExpHeap::create(SYSTEM_HEAP_SIZE, nullptr, true);
 	mSysHeap->becomeCurrentHeap();
 	mHeapStatus = new HeapStatus;
 	construct();
@@ -583,7 +583,7 @@ void System::createSoundSystem()
 	PSM::Factory* factory = new PSM::Factory;
 	factory->mMakeSeFunc  = PSM::SeSound::makeSeSound;
 	factory->mHeap        = old;
-	factory->mHeapSize    = 0x900000;
+	factory->mHeapSize    = PSM_FACTORY_HEAP_SIZE;
 	factory->mAafFile     = file;
 	factory->newSoundSystem();
 

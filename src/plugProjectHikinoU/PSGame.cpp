@@ -408,7 +408,7 @@ SysFactory::SysFactory()
 	mHeapSize      = 0;
 	mAafFile       = nullptr;
 	mMakeSeFunc    = nullptr;
-	mSolidHeapSize = 0x151800;
+	mSolidHeapSize = SYSFACTORY_HEAP_SIZE;
 	mSolidHeap     = nullptr;
 }
 
