@@ -24,7 +24,7 @@
 // these defines will not work)
 
 #define SYSTEM_HEAP_SIZE               (0x428000) // Contains pikmin/navi/onion models and anims, game text, fonts, and other global things
-#define RESOURCE_MGR2D_HEAP_SIZE       (0xD4800)  // A subset of the system heap, contains the active 2d screen
+#define RESOURCE_MGR2D_HEAP_SIZE       (0xDC000)  // A subset of the system heap, contains the active 2d screen
 #define PSM_FACTORY_HEAP_SIZE          (0x900000) // Used for some global sound effect data
 #define SYSFACTORY_HEAP_SIZE           (0x151800) // Also seems to be for sound effect data?
 #define PARTICLE_MGR_HEAP_SIZE         (0x180000) // Global heap for particle effects that spawn in the game world
