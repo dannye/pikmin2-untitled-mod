@@ -1,15 +1,5 @@
-Pikmin 2  
-[![Build Status]][actions] [![Code Progress]][progress] [![Data Progress]][progress] [![Linked Progress]][progress] [![Discord Badge]][discord]
-=============
-
-[Build Status]: https://github.com/projectPiki/pikmin2/actions/workflows/build.yml/badge.svg
-[actions]: https://github.com/projectPiki/pikmin2/actions/workflows/build.yml
-[Code Progress]: https://decomp.dev/projectPiki/pikmin2.svg?mode=shield&measure=code&label=Code&category=all
-[Data Progress]: https://decomp.dev/projectPiki/pikmin2.svg?mode=shield&measure=data&label=Data&category=all
-[Linked Progress]: https://decomp.dev/projectPiki/pikmin2.svg?mode=shield&measure=complete_code&label=Linked%20Code&category=all
-[Discord Badge]: https://img.shields.io/discord/933849697485983765?color=%237289DA&logo=discord&logoColor=%23FFFFFF
-[discord]: https://discord.gg/CWKqYMePX8
-[progress]: https://decomp.dev/projectPiki/pikmin2
+Pikmin 2: Collect the Fruit!
+============================
 
 A WIP mod of Pikmin 2, based on the "Go Here" mod by Drought-Ender.
 
@@ -79,7 +69,7 @@ Building
 - Clone the repository:
 
   ```sh
-  git clone https://github.com/dannye/pikmin2-untitled-mod.git
+  git clone https://github.com/dannye/pikmin2-ctf.git
   ```
 
 - Using [Dolphin Emulator](https://dolphin-emu.org/), extract your game's system data to `orig/GPVE01`. (Or `orig/GPVE01_D17` for demo)
