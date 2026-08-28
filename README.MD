@@ -15,15 +15,16 @@ A WIP mod of Pikmin 2, based on the "Go Here" mod by Drought-Ender.
 
 New Features/Enhancements:
 
-* "Go Here" mod by Drought-Ender, intns, and dannye
+* New "Collect the Fruit!" challenge mode
 * Restore Yellow Pikmin bomb rocks
-* Flip carrying ratio (proper fraction)
-* Display Pikmin throw trajectory
-* Press B to cancel Pikmin throw
-* Squad count increases/decreases as soon as Pikmin is plucked or thrown
-* Hold Y in Onion menu to increment/decrement by 10
-* Auto-pluck Pikmin after pressing A once
+* "Go Here" mod by Drought-Ender, intns, and dannye
 * Idle captains auto-pluck Pikmin
+* Press A once to Auto-pluck Pikmin
+* Press B to cancel Pikmin throw
+* Display Pikmin throw trajectory
+* Flip carrying ratio (proper fraction)
+* Hold Y in Onion menu to increment/decrement by 10
+* Squad count increases/decreases as soon as Pikmin is plucked or thrown
 
 Index
 -----
